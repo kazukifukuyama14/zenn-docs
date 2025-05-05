@@ -99,3 +99,6 @@ docker rm $(docker ps -a -q)
 ```
 docker image prune -a
 ```
+
+
+追記分あれば適宜更新予定。
