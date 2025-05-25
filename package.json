@@ -11,8 +11,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "* [📘 How to use](https://zenn.dev/zenn/articles/zenn-cli-guide)# zenn-docs",
   "dependencies": {
     "zenn-cli": "^0.1.159"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kazukifukuyama14/zenn-docs.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kazukifukuyama14/zenn-docs/issues"
+  },
+  "homepage": "https://github.com/kazukifukuyama14/zenn-docs#readme"
 }
