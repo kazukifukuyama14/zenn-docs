@@ -520,12 +520,14 @@ Kubernetesには、2つの異なるネットワークが存在しています。
 - **Node Network**: 物理的なノード間通信
 
 **▼外部ネットワーク**
+(例)
 
 - **LoadBalancer**: クラウドプロバイダーの外部ロードバランサー
 - **NodePort**: 各ノードの特定ポートで外部公開
 - **Ingress**: HTTP/HTTPSレベルでのルーティング制御
 
 **▼ネットワーク分離**
+(例)
 
 - **Namespace**: 論理的な分離
 - **NetworkPolicy**: トラフィック制御とセキュリティ
@@ -576,3 +578,80 @@ Kubernetesには、2つの異なるネットワークが存在しています。
 - コンテナに直接ログイン
 - 踏み台サーバ経由でコンテナへアクセス
 - サービス経由でアクセスする
+
+## 基本操作
+
+### リソースの作成・変更・確認・削除
+
+#### 作成手順
+
+「**定義作成**」　→　「**定義適用**」  
+の順で作成していきます。
+
+```text
+マニフェストファイル作成：YAMLファイルを作成
+↓
+Kubernetes反映：kubectlコマンドを利用して反映
+```
+
+**▼マニフェストファイルの作成**  
+YAMLファイルにリソースの定義を記載します。
+
+(例)
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: default
+  labels:
+    app: nginx
+    env: test
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx;1.17.2-alpine
+```
+
+**▼リソースの作成・変更**
+マニフェストファイルを指定してリソースを作成、変更します。
+
+```sh
+kubectl apply -f <filename>
+```
+
+◯オプション  
+ `-f <filename>` ： マニフェストファイルパス
+
+**▼リソース確認コマンド**
+指定したリソースの状態を確認します。
+
+```sh
+lubectl get [-f <filename>] [type]
+```
+
+◯オプション  
+`-f <filename>` ： マニフェストファイルパス  
+`TYPE` ： リソース種別（pod, resplicaset など）
+
+**▼リソース削除コマンド**
+指定したリソースを削除します。
+
+```sh
+kubectl delete [-f <filename>] [TYPE / NAME] [-o [wide|yaml]]
+```
+
+◯オプション  
+`-f <filename>` ： マニフェストファイルパス
+`TYPE / NAME -o [wide|yaml]` ： 出力形式を指定します。  
+ ※wide：追加情報の表示, yaml：YAML形式で表示
+
+#### 演習
+
+作成手順で記載したコマンドを、実際に演習形式で進めていこうと思います。
+
+📖 お品書き  
+1.`hello-world` コンテナを含むPodを作成
+2.Podがきどいうしていることを確認
+3.Podを削除
