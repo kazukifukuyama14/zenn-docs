@@ -203,7 +203,7 @@ W0525 17:12:44.569404   62706 main.go:292] Try running `docker context use defau
 
 Docker Desktop ＞ Container を確認すると、 `minikube` が起動できていることが確認できました。
 
-![Docker Desktop](/articles-image/kubernetes/fdc5fee0f9a45da5f69bf6eaee264638.png)
+![Docker Desktop](/images/kubernetes-tutorial/DockerDesktop.png)
 
 ターミナルにて、自端末のIPアドレス(IPv4)を事前に調べておきます。
 
@@ -225,15 +225,15 @@ Host minikube
 開発コンテナー ＞ その他のコンテナー に、起動している `minikube` があるので、  
 起動している `minikube` へ接続します。
 
-![Remote SSH](/articles-image/kubernetes/cb0b6d98fa20974e900a8f61b6b12767.png)
+![Remote SSH](/images/kubernetes-tutorial/editor_check.png)
 
 接続が完了したら下記の表示になるので、 `root` を選択します。
 
-![root](/articles-image/kubernetes/2025-05-2518.06.08.png)
+![root](/images/kubernetes-tutorial/minikube-root.png)
 
 下記のようになりましたら、接続と準備の方は完了になります。
 
-![setup](/articles-image/kubernetes/2025-05-2518.10.48.png)
+![setup](/images/kubernetes-tutorial/minikube-access-after.png)
 
 ### Hello World！(Kubernetes)
 
