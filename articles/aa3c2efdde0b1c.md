@@ -647,6 +647,15 @@ kubectl delete [-f <filename>] [TYPE / NAME] [-o [wide|yaml]]
 `TYPE / NAME -o [wide|yaml]` ： 出力形式を指定します。  
  ※wide：追加情報の表示, yaml：YAML形式で表示
 
+#### 💡 Tips
+
+学習途中で `minikube` を途中で停止し後日再開する際、テキストエディタの操作方法を以下の手順で進めていくと学習を再開できます。
+
+**※Remote SSHの拡張機能をインストールしている、かつ、ターミナルでminikubeを起動している前提** 1.画面左下のRemote SSHを押下  
+2.実行中のコンテナーにアタッチを押下
+
+![nimikube-open-tips](/images/kubernetes-tutorial/minikube-open-tips.png)
+
 #### 演習
 
 作成手順で記載したコマンドを、実際に演習形式で進めていこうと思います。
@@ -655,3 +664,96 @@ kubectl delete [-f <filename>] [TYPE / NAME] [-o [wide|yaml]]
 1.`hello-world` コンテナを含むPodを作成
 2.Podが起動していることを確認
 3.Podを削除
+
+**1.`hello-world` コンテナを含むPodを作成**  
+・まずは `root` 直下にいることを確認します。
+
+```sh
+root@minikube:~# pwd
+/root
+root@minikube:~#
+```
+
+・作業用ディレクトリを作成します。名前は何でもよいですが、とりあえず `tutorial` ディレクトリとしておきます。
+
+```sh
+root@minikube:~# mkdir ./tutorial
+```
+
+　・`root` 直下に `tutorial` ディレクトリが作成されていることを確認します。
+
+```sh
+root@minikube:~# ls -l
+total 4
+drwxr-xr-x 2 root root 4096 May 27 23:05 tutorial
+root@minikube:~#
+```
+
+　・`tutorial` 直下に `pod.yml` を作成します。(注釈あり)
+
+```yml
+# Kubernetes APIのバージョンを指定（Pod リソースはv1）
+apiVersion: v1
+# リソースの種類を指定（この場合はPod）
+kind: Pod
+# Podのメタデータ情報
+metadata:
+  # Podの名前
+  name: nginx
+  # Podが作成される名前空間（省略可能、デフォルトはdefault）
+  namespace: default
+  # Podに付与するラベル（セレクタやフィルタリングに使用）
+  labels:
+    app: nginx # アプリケーション名を示すラベル
+    env: test # 環境を示すラベル（test, prod, devなど）
+# Podの仕様・設定
+spec:
+  # Pod内で実行するコンテナのリスト
+  containers:
+    # コンテナの名前
+    - name: nginx-container
+      # 使用するDockerイメージとタグ
+      image: nginx:1.17.2-alpine
+```
+
+**2.Podが起動していることを確認**
+・`tutorial` ディレクトリに移動します。
+
+```sh
+root@minikube:~# cd tutorial
+root@minikube:~/tutorial#
+```
+
+・リソースを作成します。
+
+```sh
+root@minikube:~/tutorial# kubectl apply -f pod.yml
+pod/nginx created
+root@minikube:~/tutorial#
+```
+
+・作成されたリソースの確認を実施します。
+
+```sh
+root@minikube:~/tutorial# kubectl get pod
+NAME    READY   STATUS              RESTARTS   AGE
+nginx   0/1     ContainerCreating   0          52s
+root@minikube:~/tutorial#
+```
+
+**3.Podを削除**
+・リソースを削除します。
+
+```sh
+root@minikube:~/tutorial# kubectl delete -f pod.yml
+pod "nginx" deleted
+root@minikube:~/tutorial#
+```
+
+・リソースの削除確認を実施します。
+
+```sh
+root@minikube:~/tutorial# kubectl get pod
+No resources found in default namespace.
+root@minikube:~/tutorial#
+```
