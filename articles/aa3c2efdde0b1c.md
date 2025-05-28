@@ -7,12 +7,14 @@ published: true
 published_at: 2027-05-31 09:00
 ---
 
-## 🏃 前提
+## 🎯 はじめに
 
 筆者はDockerを業務で触ったことはございますが、Kubernetesを業務で触ったことがございません。  
 そこで、  
 **Kubernetesを1ミリもしらない状態でアウトプットしていけばどこまで理解することができるのか**  
 をハンズオン形式で実践して理解を深めていきたいと思います。
+
+## 🛠️ 環境構築
 
 ### Docker
 
@@ -20,7 +22,7 @@ Dockerはコンテナを作成・管理するために必要です。
 以下のリンクから自分の環境に合わせてインストールします。
 <https://docs.docker.com/engine/install/>
 
-### IDE
+### IDE（開発環境）
 
 Visual Studio Codeなど慣れているものでいいとは思いますが、私はCursorを使用していきます。
 <https://www.cursor.com/ja>
@@ -28,7 +30,7 @@ Visual Studio Codeなど慣れているものでいいとは思いますが、�
 また、テキストエディタには拡張機能「**Remote SSH**」が必要ですのでそちらをインストールしておきます。
 <https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh>
 
-### ターミナル
+### Kubernetes CLI（kubectl）
 
 下記コマンドを入力し、インストールしていきます。
 
@@ -37,33 +39,37 @@ brew install kubernetes-cli
 ```
 
 ```bash
-brew install
+brew install minikube
 ```
 
 (参考)  
 <https://qiita.com/Asaminnn/items/6d414d4776d964e94e96>
 
-## 📝 概要
+## 📚 Kubernetesの基礎知識
 
-### Kubernetesとは？
+### Kubernetesとは
 
 「**Kubernetes**」とは、  
 **コンテナ型仮想化技術を対象とした運用管理、自動化のツール、コンテナオーケストレーションツールの一つ**  
 のことです。
 
-### Dockerとの違い
+### DockerとKubernetesの違い
 
-コンテナと聞くとDockerを思い浮かべますが、DockerとKubernetesでは違いがあります。  
+コンテナと聞くとDockerを思い浮かべますが、DockerとKubernetesでは違いがあります。
+
 **Docker**は簡単にコンテナの作成や削除ができるソフトウェアツールです。  
 必要なパッケージのコード化や環境の再配布、チーム開発時の環境の統一などに使用されます。
 
 一方、**Kubernetes**は複数のコンテナを用いた開発に使用するソフトウェアツールです。  
 各コンテナの状態を確認し、問題のあるコンテナを再起動する、といった管理が可能です。
 
-この二つのツールの間では管理単位にも違いがあります。  
-Dockerはある**マシン上の一つ一つのコンテナが最小の単位**で、コンテナの乗ったマシンであるノードも管理の単位です。
+#### 管理単位の違い
 
-一方のKubernetesでは最小の単位は**Pod**です。  
+この二つのツールの間では管理単位にも違いがあります。
+
+**Docker**はある**マシン上の一つ一つのコンテナが最小の単位**で、コンテナの乗ったマシンであるノードも管理の単位です。
+
+一方の**Kubernetes**では最小の単位は**Pod**です。  
 Podは一つ以上のコンテナを持ちますが、1Podに1コンテナである場合が多いです。  
 **1つ以上のPodを持つマシンがノード（ワーカーノード）** です。
 
@@ -75,21 +81,21 @@ Podは一つ以上のコンテナを持ちますが、1Podに1コンテナであ
 | **用途** | コンテナ管理          | アプリケーションのコンテナ化 |
 | **単位** | Pod、ノード、クラスタ | コンテナ、ノード             |
 
-### Kubernetesを使用するメリットとデメリット
+### Kubernetesのメリット・デメリット
 
 Kubernetesは、非常に効率よく大規模なITインフラを運用・管理できるツールです。  
 しかし、万能のツールというわけではなく、実際には以下のようなメリット・デメリットを持ちます。
 
-#### メリット
+#### ✅ メリット
 
-- **コストを削減できる**
+- **コストを削減できる**  
   Kubernetesには、負荷分散やリソース配分などを自動的に調整する機能が含まれています。
 
   こうした機能を活用することで、システムの安定稼働において非常に重要な「調整作業」を自動化できるため、運用コストの低減が可能です。
 
   また、過去の実績に基づいて効率よくリソースを使用できるため、従量課金制を採用するクラウドプラットフォームの月額利用料を節約することができます。
 
-- **大量のコンテナを一括管理できる**
+- **大量のコンテナを一括管理できる**  
   Kubernetesを利用することで、大量のコンテナを容易に管理できます。
 
   例えば、多くのコンテナに対して設定を変更する際に、コンテナ1つ1つに変更作業を行うのは大変な労力がかかります。
@@ -98,14 +104,14 @@ Kubernetesは、非常に効率よく大規模なITインフラを運用・管�
 
   また、ローリングアップデートに対応しているため、デプロイ作業を手動で行う必要がないという点も大きなメリットです。
 
-- **起動が高速・軽量で迅速なアプリケーション開発を実現できる**
+- **起動が高速・軽量で迅速なアプリケーション開発を実現できる**  
   コンテナはアプリケーションが必要とするリソースのみが含まれているため、リソース消費を抑え、従来の仮想マシンよりも高速かつ軽量で動作します。
 
   これにより、リソースを効率的に活用でき、アプリケーション開発を迅速に進められます。
 
   市場の変化に対応し迅速なリリースが求められる昨今では、Kubernetesの活用は非常に重要です。
 
-- **DevOpsを実現しやすい**
+- **DevOpsを実現しやすい**  
   DevOpsとは「開発と運用の一体化によって、システムを常に最新の状態に保ち、ユーザーにいち早く新しい価値を届ける」という考え方です。
 
   特にWebサービスなどの継続的な機能の更新とリリースを行うシステムで取り入れられています。
@@ -114,24 +120,24 @@ Kubernetesは、非常に効率よく大規模なITインフラを運用・管�
 
   本番環境を稼働させた状態で、改善点の実装と適用が行えるため、システム全体を常に最新・最善の状態に保ちつつダウンタイムを最小化することが可能です。これは「DevOps」の実現において威力を発揮します。
 
-- **オンプレミスとクラウドのどちらでも利用できる**
+- **オンプレミスとクラウドのどちらでも利用できる**  
   Kubernetesは複数のソフトウェア・ハードウェア上で動作します。
 
   更にクラウドのベンダーの多くがサポートしているためオンプレミス・クラウド問わずに利用可能です。
 
   使用用途や前提を問わず使用できるため、複数コンテナを用いた開発をする場合は積極的に使用したい技術と言えるでしょう。
 
-- **アプリケーションのデプロイも容易になる**
+- **アプリケーションのデプロイも容易になる**  
   Kubernetesではコンテナを基にデプロイを行うため、手動でデプロイする必要がありません。
 
   さらに、アプリケーションはローカルで動作するため、途中で止まってしまうなどの可能性が低いです。
 
-- **スケーリングの柔軟性が高い**
+- **スケーリングの柔軟性が高い**  
   KubernetesではPodをスケーリングすることが可能です。
 
   そのため、使用する用途に応じてPodの自動生成などができ、柔軟にリソースを増減できます。
 
-- **セキュリティを強化できる障害に強い**
+- **セキュリティを強化できる**  
   Kubernetesは周辺技術を理解できることでセキュリティの強化が可能です。
 
   例えばKubernetesはAPIを用いて操作するため、APIを使用するユーザーの認証・権限の制限をすることでセキュリティ性能を高めることができます。
@@ -140,7 +146,7 @@ Kubernetesは、非常に効率よく大規模なITインフラを運用・管�
 
   このように様々なアクセス制限や機能制限、権限の設定を細かくできるため、使用用途に応じてセキュリティレベルを設定できます。
 
-- **障害に強い**
+- **障害に強い**  
   Kubernetesは自動回復機能を備えています。
 
   コンテナがダウンした場合や誤って削除してしまった場合にも、コンテナを自動で回復することができます。
@@ -149,36 +155,39 @@ Kubernetesは、非常に効率よく大規模なITインフラを運用・管�
 
   利用者は自動回復機能を頼りに、落ち着いて操作することができます。
 
-#### デメリット
+#### ❌ デメリット
 
-- **物理サーバーの台数が増える傾向にあり初期投資がかかりやすい**
+- **物理サーバーの台数が増える傾向にあり初期投資がかかりやすい**  
   Kubernetesでは、実行マシンとしての「ワーカーノード」と管理マシンとしての「マスターノード」が必要です。
 
   実際の運用ではワーカーノードとマスターノードを別の物理マシンとして用意する必要があり、ノードの数に比例して必要となる物理サーバーの数も増加します。
 
   したがって、構成や規模によってはオンプレミス環境のようにある程度の初期投資が必要になる傾向があります。
 
-- **更新頻度が高く、学習コストも高い**
+- **更新頻度が高く、学習コストも高い**  
   Kubernetesは機能が豊富で、進化の過程にあるツールでもあります。  
   したがって、Kubernetesを上手く活用するためには継続的なキャッチアップが必要になります。
 
-- **使いこなすには目的を明確にする必要がある**
-
+- **使いこなすには目的を明確にする必要がある**  
   Kubernetesは豊富な機能を持っています。
 
   各機能を活用することで柔軟な設定が実現でき、拡張性も高いです。その分、利用機能の選択や設定にも多くの選択肢があります。
 
   Kubernetesを用いて何を実現したいのか、運用管理の形を事前に明確にして利用する機能や設定内容を定める必要があります。
 
-## 💻️ ハンズオン
+## 💻 ハンズオン実践
 
-### 起動
+### minikubeの起動
 
-以下コマンドを実施し、minicube を起動します。
+以下コマンドを実施し、minikubeを起動します。
 
 ```bash
 minikube start
+```
 
+実行結果：
+
+```bash
 W0525 17:12:44.569352   62706 main.go:291] Unable to resolve the current Docker CLI context "default": context "default": context not found: open /Users/wan0ri/.docker/contexts/meta/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f/meta.json: no such file or directory
 W0525 17:12:44.569404   62706 main.go:292] Try running `docker context use default` to resolve the above error
 😄  Darwin 15.5 (arm64) 上の minikube v1.36.0
@@ -204,6 +213,8 @@ W0525 17:12:44.569404   62706 main.go:292] Try running `docker context use defau
 Docker Desktop ＞ Container を確認すると、 `minikube` が起動できていることが確認できました。
 
 ![Docker Desktop](/images/kubernetes-tutorial/DockerDesktop.png)
+
+### Remote SSH接続の設定
 
 ターミナルにて、自端末のIPアドレス(IPv4)を事前に調べておきます。
 
@@ -235,7 +246,7 @@ Host minikube
 
 ![setup](/images/kubernetes-tutorial/minikube-access-after.png)
 
-### Hello World！(Kubernetes)
+### Hello World！（Kubernetes初回実行）
 
 お試しに、テキストエディタ内でターミナルを起動してKubernetes上に `hello-world` Dockerコンテナを立ち上げるところまで実施します。
 
@@ -243,7 +254,7 @@ Host minikube
 そのままコンテナ起動コマンドを実行しても、コンテナ内に `kubectl` コマンドが登録されていないため立ち上げることができません。  
 そこで、下記コマンドを実行して起動できるように準備していきます。
 
-#### 準備(minikubeコンテナ内にkubectlをインストール)
+#### 事前準備：minikubeコンテナ内にkubectlをインストール
 
 コンテナ内でkubectlを使いたい場合は、以下の手順でインストールできます：
 
@@ -275,64 +286,69 @@ cp /etc/kubernetes/admin.conf ~/.kube/config
 chown $(id -u):$(id -g) ~/.kube/config
 ```
 
-#### 確認
+#### 動作確認
 
 ```bash
 kubectl get nodes
+```
 
+実行結果：
+
+```bash
 NAME       STATUS   ROLES           AGE   VERSION
 minikube   Ready    control-plane   85m   v1.33.1
 ```
 
-#### コンテナ起動
+#### hello-worldコンテナの起動
 
 ```bash
 kubectl run hello-world --image hello-world --restart=Never
+```
 
+実行結果：
+
+```bash
 pod/hello-world created
 ```
 
-上記コマンドをブロックごとに切り出して解説します：
+**コマンド解説：**
 
-- kubectl
-  Kubernetesのコマンド
-
-- run
-  起動コマンド
-
-- hello-world
-  KubernetesのPod名
-
-- --image
-  Kubernetesのイメージ名の指定
-
-- hello-world
-  Kubernetesのイメージ名
-
-- --restart=Never
-  起動方法の指定※
+- `kubectl` : Kubernetesのコマンド
+- `run` : 起動コマンド
+- `hello-world` : KubernetesのPod名
+- `--image` : Kubernetesのイメージ名の指定
+- `hello-world` : Kubernetesのイメージ名
+- `--restart=Never` : 起動方法の指定※
 
 ※起動方法には `Always` や `OnFailure`がある。以下参考。  
 <https://qiita.com/ssc-wkani/items/ee0930001c0663358392>
 
-#### 起動後の確認
+#### 起動状況の確認
 
 出来上がっていることを確認するため、`kubectl get pod` コマンドを実行します。
 
 ```bash
 kubectl get pod
+```
 
+実行結果：
+
+```bash
 NAME          READY   STATUS      RESTARTS   AGE
 hello-world   0/1     Completed   0          10m
 ```
 
-#### ログ確認
+#### ログの確認
 
 ログを確認するため、 `kubectl logs pod/hello-world` コマンドを実行します。
 
 ```bash
 kubectl logs pod/hello-world
+```
 
+実行結果：
+
+```bash
 Hello from Docker!
 This message shows that your installation appears to be working correctly.
 
@@ -355,17 +371,23 @@ For more examples and ideas, visit:
  https://docs.docker.com/get-started/
 ```
 
-#### 作成したコンテナの削除
+#### リソースのクリーンアップ
 
 作成したコンテナの削除を実施します。
 
 ```bash
 kubectl delete pod/hello-world
+```
 
+実行結果：
+
+```bash
 pod "hello-world" deleted
 ```
 
-### Kubernetesリソース
+## 📋 Kubernetesリソースの理解
+
+### リソースの分類
 
 Kubernetesの主なリソースは以下の通りとなります。
 
@@ -376,29 +398,28 @@ Kubernetesの主なリソースは以下の通りとなります。
 | 設定         | ConfigMap / Secret                          |
 | ストレージ   | PersistentVolume / PersistentVolumeClaim    |
 
-#### ワークロード
+### ワークロード系リソース
 
-- Pod
+- **Pod**  
   最小単位。Dockerコンテナの集合。
 
-- ReplicaSet
+- **ReplicaSet**  
   Podの集合。Podをスケールできる。
 
-- Deployment
+- **Deployment**  
   ReplicaSetの集合。ReplicaSetの世代管理ができる。
 
-- StatefulSet
+- **StatefulSet**  
   Podの集合。Podをスケールする際の名前が一定。
 
-#### サービス
+### サービス系リソース
 
-- Service
+- **Service**  
   外部公開。名前解決。L4ロードバランサー※1。
-- Ingress
+- **Ingress**  
   外部公開。L7ロードバランサー※2。
 
-※1  
-::: details L4ロードバランサー（レイヤー4）
+:::details L4ロードバランサー（レイヤー4）
 **動作レベル**: トランスポート層（TCP/UDP）  
 **特徴**：
 
@@ -406,21 +427,21 @@ Kubernetesの主なリソースは以下の通りとなります。
 - パケットの中身（HTTPヘッダーやコンテンツ）は見ない
 - 高速で処理が軽い
 - プロトコルに依存しない
-  **負荷分散の例**
+
+**負荷分散の例**:
 
 ```bash
 クライアント → L4ロードバランサー → サーバー群
    (IP:Port で振り分け)
 ```
 
-**使用例**
+**使用例**  
 ・データベースの負荷分散  
- ・ゲームサーバーの負荷分散  
- ・単純なWebサーバーの負荷分散  
+・ゲームサーバーの負荷分散  
+・単純なWebサーバーの負荷分散  
 :::
 
-※2  
-::: details L7ロードバランサー（レイヤー7）
+:::details L7ロードバランサー（レイヤー7）
 **動作レベル**: アプリケーション層（HTTP/HTTPS）  
 **特徴**：
 
@@ -428,7 +449,8 @@ Kubernetesの主なリソースは以下の通りとなります。
 - より高度なルーティングが可能
 - 処理が重い（パケットの中身を解析するため）
 - アプリケーション固有の機能を提供
-  **負荷分散の例**
+
+**負荷分散の例**:
 
 ```bash
 クライアント → L7ロードバランサー → サーバー群
@@ -437,36 +459,32 @@ Kubernetesの主なリソースは以下の通りとなります。
 
 :::
 
-#### 設定
+### 設定系リソース
 
-- ConfigMap
+- **ConfigMap**  
   設定情報を保存するためのリソース。
 
-- Secret
+- **Secret**  
   機微情報を保存するためのリソース。
 
-#### ストレージ
+### ストレージ系リソース
 
-- PersistentVolume
-  永続データの実態。 ストレージへの接続情報、ストレージの抽象化を行う。
-- PersistentVolumeClaim
-  永続データの要求。 抽象化されたストレージの要求を行う。
+- **PersistentVolume**  
+  永続データの実態。ストレージへの接続情報、ストレージの抽象化を行う。
+- **PersistentVolumeClaim**  
+  永続データの要求。抽象化されたストレージの要求を行う。
 
-### Kubernetesネットワーク
+## 🌐 Kubernetesネットワークの理解
 
-#### NodeとPod
+### ノードとPodの分散配置
 
 リソースは各ワーカーノードに分散配置されます。
 
-上記について図を書こうと思いましたが、私には図を書く環境が整っていないためAIにアスキーアートで出してもらいました。
-
-リソース分散の特徴として：  
-　• 各WorkerノードにPodが分散配置される  
-　• Schedulerがリソース使用量を考慮して最適なノードを選択  
-　• 障害時の影響を最小化（単一障害点の回避）  
-　• 負荷分散によるパフォーマンス向上
-
-が、下図からある程度理解することができるかと思います。
+**リソース分散の特徴**  
+• 各WorkerノードにPodが分散配置される  
+• Schedulerがリソース使用量を考慮して最適なノードを選択  
+• 障害時の影響を最小化（単一障害点の回避）  
+• 負荷分散によるパフォーマンス向上
 
 ```text
 Kubernetes Cluster - リソースの分散配置
@@ -501,33 +519,28 @@ Worker Node 1    Worker Node 2    Worker Node 3
 └───────────┘    └───────────┘    └───────────┘
 ```
 
-#### 2つの異なるネットワーク
+### ネットワークの種類
 
 Kubernetesには、2つの異なるネットワークが存在しています。
 
-- クラスタネットワーク
-  クラスタネットワークへ外へ直接アクセスすることができない。
-- 外部ネットワーク
+- **クラスタネットワーク**  
+  クラスタ内部のネットワーク。外部から直接アクセスすることができない。
+- **外部ネットワーク**  
   管理端末は外部ネットワークに接続。
 
-これも例に及んでAIにアスキーアートで出してもらいました。
-
-**▼主要な特徴と説明**  
-　●クラスタネットワーク
+#### クラスタネットワークの構成要素
 
 - **Pod Network**: Pod間の直接通信用（CNIプラグインが管理）
-- **Service Network**: 仮想IPによる負荷分散とサービス発見
-- **Node Network**: 物理的なノード間通信
+- **Service Network:** 仮想IPによる負荷分散とサービス発見
+- **Node Network:** 物理的なノード間通信
 
-**▼外部ネットワーク**
-(例)
+#### 外部ネットワークとの接続方法
 
 - **LoadBalancer**: クラウドプロバイダーの外部ロードバランサー
 - **NodePort**: 各ノードの特定ポートで外部公開
 - **Ingress**: HTTP/HTTPSレベルでのルーティング制御
 
-**▼ネットワーク分離**
-(例)
+#### ネットワーク分離とセキュリティ
 
 - **Namespace**: 論理的な分離
 - **NetworkPolicy**: トラフィック制御とセキュリティ
@@ -570,20 +583,21 @@ Kubernetesには、2つの異なるネットワークが存在しています。
    │                        │
    Node 1 ←─────────────────→ Node 2
    (192.168.1.10)           (192.168.1.11)
-
 ```
 
-コンテナのアクセス方法として、以下の2つのやり方があります：
+### コンテナへのアクセス方法
+
+コンテナのアクセス方法として、以下の方法があります：
 
 - コンテナに直接ログイン
 - 踏み台サーバ経由でコンテナへアクセス
 - サービス経由でアクセスする
 
-## 基本操作
+## ⚙️ Kubernetesの基本操作
 
 ### リソースの作成・変更・確認・削除
 
-#### 作成手順
+#### 基本的な作成手順
 
 「**定義作成**」　→　「**定義適用**」  
 の順で作成していきます。
@@ -594,12 +608,13 @@ Kubernetesには、2つの異なるネットワークが存在しています。
 Kubernetes反映：kubectlコマンドを利用して反映
 ```
 
-**▼マニフェストファイルの作成**  
+#### マニフェストファイルの作成
+
 YAMLファイルにリソースの定義を記載します。
 
-(例)
+**例：**
 
-```yaml
+```yaml:pod.yml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -611,87 +626,97 @@ metadata:
 spec:
   containers:
     - name: nginx-container
-      image: nginx;1.17.2-alpine
+      image: nginx:1.17.2-alpine
 ```
 
-**▼リソースの作成・変更**
+**リソースの作成・変更**:
 マニフェストファイルを指定してリソースを作成、変更します。
 
-```sh
+```bash
 kubectl apply -f <filename>
 ```
 
-◯オプション  
- `-f <filename>` ： マニフェストファイルパス
+**オプション：**  
+`-f <filename>` ： マニフェストファイルパス
 
-**▼リソース確認コマンド**
+**リソース確認コマンド:**
 指定したリソースの状態を確認します。
 
-```sh
-lubectl get [-f <filename>] [type]
+```bash
+kubectl get [-f <filename>] [TYPE]
 ```
 
-◯オプション  
+**オプション：**  
 `-f <filename>` ： マニフェストファイルパス  
-`TYPE` ： リソース種別（pod, resplicaset など）
+`TYPE` ： リソース種別（pod, replicaset など）
 
-**▼リソース削除コマンド**
+**リソース削除コマンド**
 指定したリソースを削除します。
 
-```sh
-kubectl delete [-f <filename>] [TYPE / NAME] [-o [wide|yaml]]
+```bash
+kubectl delete [-f <filename>] [TYPE/NAME] [-o [wide|yaml]]
 ```
 
-◯オプション  
-`-f <filename>` ： マニフェストファイルパス
-`TYPE / NAME -o [wide|yaml]` ： 出力形式を指定します。  
- ※wide：追加情報の表示, yaml：YAML形式で表示
+**オプション：**  
+`-f <filename>` ： マニフェストファイルパス  
+`TYPE/NAME -o [wide|yaml]` ： 出力形式を指定します。  
+※wide：追加情報の表示, yaml：YAML形式で表示
 
-#### 💡 Tips
+### 💡 学習継続のためのTips
 
 学習途中で `minikube` を途中で停止し後日再開する際、テキストエディタの操作方法を以下の手順で進めていくと学習を再開できます。
 
-**※Remote SSHの拡張機能をインストールしている、かつ、ターミナルでminikubeを起動している前提** 1.画面左下のRemote SSHを押下  
-2.実行中のコンテナーにアタッチを押下
+**※前提条件：Remote SSHの拡張機能をインストールしている、かつ、ターミナルでminikubeを起動している**:
 
-![nimikube-open-tips](/images/kubernetes-tutorial/minikube-open-tips.png)
+1. 画面左下のRemote SSHを押下
+2. 実行中のコンテナーにアタッチを押下
 
-#### 演習
+![minikube-open-tips](/images/kubernetes-tutorial/minikube-open-tips.png)
+
+### 🎯 実践演習：Podの作成から削除まで
 
 作成手順で記載したコマンドを、実際に演習形式で進めていこうと思います。
 
-📖 お品書き  
-1.`hello-world` コンテナを含むPodを作成
-2.Podが起動していることを確認
-3.Podを削除
+**📖 演習内容**:
 
-**1.`hello-world` コンテナを含むPodを作成**  
-・まずは `root` 直下にいることを確認します。
+1. nginxコンテナを含むPodを作成
+2. Podが起動していることを確認
+3. Podを削除
 
-```sh
+#### Step 1: Podの作成
+
+**現在のディレクトリを確認**:
+
+```bash
 root@minikube:~# pwd
 /root
 root@minikube:~#
 ```
 
-・作業用ディレクトリを作成します。名前は何でもよいですが、とりあえず `tutorial` ディレクトリとしておきます。
+**作業用ディレクトリを作成**:
 
-```sh
+名前は何でもよいですが、とりあえず `tutorial` ディレクトリとしておきます。
+
+```bash
 root@minikube:~# mkdir ./tutorial
 ```
 
-　・`root` 直下に `tutorial` ディレクトリが作成されていることを確認します。
+**ディレクトリの作成確認**:
 
-```sh
+`root` 直下に `tutorial` ディレクトリが作成されていることを確認します。
+
+```bash
 root@minikube:~# ls -l
 total 4
 drwxr-xr-x 2 root root 4096 May 27 23:05 tutorial
 root@minikube:~#
 ```
 
-　・`tutorial` 直下に `pod.yml` を作成します。(注釈あり)
+**マニフェストファイルの作成**:
 
-```yml
+`tutorial` 直下に `pod.yml` を作成します。
+
+```yaml:tutorial/pod.yml
 # Kubernetes APIのバージョンを指定（Pod リソースはv1）
 apiVersion: v1
 # リソースの種類を指定（この場合はPod）
@@ -716,44 +741,64 @@ spec:
       image: nginx:1.17.2-alpine
 ```
 
-**2.Podが起動していることを確認**
-・`tutorial` ディレクトリに移動します。
+#### Step 2: Podの起動確認
 
-```sh
+**作業ディレクトリに移動**:
+
+```bash
 root@minikube:~# cd tutorial
 root@minikube:~/tutorial#
 ```
 
-・リソースを作成します。
+**リソースの作成**:
 
-```sh
+```bash
 root@minikube:~/tutorial# kubectl apply -f pod.yml
 pod/nginx created
 root@minikube:~/tutorial#
 ```
 
-・作成されたリソースの確認を実施します。
+**作成されたリソースの確認**:
 
-```sh
+```bash
 root@minikube:~/tutorial# kubectl get pod
 NAME    READY   STATUS              RESTARTS   AGE
 nginx   0/1     ContainerCreating   0          52s
 root@minikube:~/tutorial#
 ```
 
-**3.Podを削除**
-・リソースを削除します。
+#### Step 3: Podの削除
 
-```sh
+**リソースの削除**:
+
+```bash
 root@minikube:~/tutorial# kubectl delete -f pod.yml
 pod "nginx" deleted
 root@minikube:~/tutorial#
 ```
 
-・リソースの削除確認を実施します。
+**削除の確認**:
 
-```sh
+```bash
 root@minikube:~/tutorial# kubectl get pod
 No resources found in default namespace.
 root@minikube:~/tutorial#
 ```
+
+<!-- ## ※ここから続き -->
+
+## 🎉 まとめ
+
+この記事では、Kubernetesの基本概念から実際のハンズオンまでを通して学習しました。
+
+**学習した内容**:
+
+- Kubernetesの基本概念とDockerとの違い
+- Kubernetesのメリット・デメリット
+- minikubeを使った環境構築
+- 基本的なkubectlコマンドの使い方
+- Podの作成・確認・削除の実践
+
+Kubernetesは学習コストが高いツールですが、コンテナオーケストレーションにおいて非常に強力な機能を提供します。今回の基礎学習を土台に、さらに深い理解を目指していきたいと思います。
+
+次回は、ReplicaSetやDeploymentなど、より実践的なリソースについて学習予定です。
