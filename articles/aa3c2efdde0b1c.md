@@ -785,6 +785,99 @@ No resources found in default namespace.
 root@minikube:~/tutorial#
 ```
 
+### 🃏 マニフェストファイルの種類
+
+前段では、Podの作成・確認・削除を行いました。  
+ここでは、マニフェストファイルの種類について記載します。
+
+#### そもそもマニフェストファイルって何？
+
+- インデントで構造を定義するYAMLファイル形式のこと。
+- 種別、メタデータ、コンテナの3構成で定義されている。
+  ※リソースによって定義の中身に変動あり
+
+前段で説明しました `pod.yml` について、改めて詳細の説明を記載したいと思います。
+
+(例)：
+
+::: details tutorial/pod.yml
+
+```yaml:tutorial/pod.yml
+# kind と apiVersion
+apiVersion: v1
+kind: Pod
+# metadata と name、namespace、labels
+metadata:
+  name: nginx
+  namespace: default
+  labels:
+    app: nginx # アプリケーション名を示すラベル
+    env: test # 環境を示すラベル（test, prod, devなど）
+# コンテナの設定
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx:1.17.2-alpine
+```
+
+:::
+
+#### kind と apiVersion
+
+- リソース種別。
+- kindによって、apiVersionの値が変わる。
+
+#### metadata と name、namespace、labels
+
+- Pod名は名前空間と合わせて一意になるようにする。
+  ※namespaceを省略した場合は、defaultが適用される。
+- labelsはセレクタやフィルタリングに使用される。
+- labelsは複数指定可能。
+
+#### spec
+
+- コンテナの設定。
+- 複数のコンテナを指定可能。
+- コンテナの設定は複数指定可能。
+
+---
+
+例題には記載しておりませんが、コンテナの設定には以下のようなものがあります。
+
+```yaml:pod.yml
+〜説明用のため、specから上は省略〜
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.17.2-alpine
+      # command と args の設定
+      command: ["/bin/sh"]
+      args: ["-c", "while true; do echo hello; sleep ${DELAY}; done"]
+      # env の設定
+      env:
+      - name: "DELAY"
+        value: "5"
+```
+
+#### command と args
+
+- コンテナの起動時に実行するコマンドと引数を指定する。
+- commandはコマンド名、argsは引数。
+- commandは1つ、argsは複数指定可能。
+- commandとargsはどちらか一方のみ指定可能。
+- commandとargsの両方を指定した場合、commandのコマンドが実行される。
+- 例題での設定では、コンテナが起動して`から5秒ごとに「hello」と表示するような例題。
+
+#### env
+
+- コンテナ内で使用する環境変数を設定する。
+- nameは環境変数名、valueは値。
+- envは複数指定可能。
+- envはcommandとargsの後に記載する。
+- 例題での設定では、コンテナ内で環境変数「DELAY」を5に設定している。
+
+### 👓️ kindに応じた apiVersion の確認
+
 <!-- ## ※ここから続き -->
 
 ## 🎉 まとめ
