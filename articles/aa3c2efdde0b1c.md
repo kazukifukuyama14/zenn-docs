@@ -1,6 +1,6 @@
 ---
 title: "ミリしらKubernetes〜ド初心者がKubernetesをある程度理解するまでの記録〜"
-emoji: "⛴️"
+emoji: "🕸️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [Kubernetes, Docker]
 published: true
@@ -22,6 +22,8 @@ Dockerはコンテナを作成・管理するために必要です。
 以下のリンクから自分の環境に合わせてインストールします。
 <https://docs.docker.com/engine/install/>
 
+---
+
 ### IDE（開発環境）
 
 Visual Studio Codeなど慣れているものでいいとは思いますが、私はCursorを使用していきます。
@@ -29,6 +31,8 @@ Visual Studio Codeなど慣れているものでいいとは思いますが、�
 
 また、テキストエディタには拡張機能「**Remote SSH**」が必要ですのでそちらをインストールしておきます。
 <https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh>
+
+---
 
 ### Kubernetes CLI（kubectl）
 
@@ -52,6 +56,8 @@ brew install minikube
 「**Kubernetes**」とは、  
 **コンテナ型仮想化技術を対象とした運用管理、自動化のツール、コンテナオーケストレーションツールの一つ**  
 のことです。
+
+---
 
 ### DockerとKubernetesの違い
 
@@ -80,6 +86,8 @@ Podは一つ以上のコンテナを持ちますが、1Podに1コンテナであ
 | -------- | --------------------- | ---------------------------- |
 | **用途** | コンテナ管理          | アプリケーションのコンテナ化 |
 | **単位** | Pod、ノード、クラスタ | コンテナ、ノード             |
+
+---
 
 ### Kubernetesのメリット・デメリット
 
@@ -212,7 +220,7 @@ W0525 17:12:44.569404   62706 main.go:292] Try running `docker context use defau
 
 Docker Desktop ＞ Container を確認すると、 `minikube` が起動できていることが確認できました。
 
-![Docker Desktop](/images/kubernetes-tutorial/DockerDesktop.png)
+## ![Docker Desktop](/images/kubernetes-tutorial/DockerDesktop.png)
 
 ### Remote SSH接続の設定
 
@@ -245,6 +253,8 @@ Host minikube
 下記のようになりましたら、接続と準備の方は完了になります。
 
 ![setup](/images/kubernetes-tutorial/minikube-access-after.png)
+
+---
 
 ### Hello World！（Kubernetes初回実行）
 
@@ -398,6 +408,8 @@ Kubernetesの主なリソースは以下の通りとなります。
 | 設定         | ConfigMap / Secret                          |
 | ストレージ   | PersistentVolume / PersistentVolumeClaim    |
 
+---
+
 ### ワークロード系リソース
 
 - **Pod**  
@@ -411,6 +423,8 @@ Kubernetesの主なリソースは以下の通りとなります。
 
 - **StatefulSet**  
   Podの集合。Podをスケールする際の名前が一定。
+
+---
 
 ### サービス系リソース
 
@@ -459,6 +473,8 @@ Kubernetesの主なリソースは以下の通りとなります。
 
 :::
 
+---
+
 ### 設定系リソース
 
 - **ConfigMap**  
@@ -466,6 +482,8 @@ Kubernetesの主なリソースは以下の通りとなります。
 
 - **Secret**  
   機微情報を保存するためのリソース。
+
+---
 
 ### ストレージ系リソース
 
@@ -518,6 +536,8 @@ Worker Node 1    Worker Node 2    Worker Node 3
 │ └───────┘ │    │ └───────┘ │    │ └───────┘ │
 └───────────┘    └───────────┘    └───────────┘
 ```
+
+---
 
 ### ネットワークの種類
 
@@ -584,6 +604,8 @@ Kubernetesには、2つの異なるネットワークが存在しています。
    Node 1 ←─────────────────→ Node 2
    (192.168.1.10)           (192.168.1.11)
 ```
+
+---
 
 ### コンテナへのアクセス方法
 
@@ -662,6 +684,8 @@ kubectl delete [-f <filename>] [TYPE/NAME] [-o [wide|yaml]]
 `TYPE/NAME -o [wide|yaml]` ： 出力形式を指定します。  
 ※wide：追加情報の表示, yaml：YAML形式で表示
 
+---
+
 ### 💡 学習継続のためのTips
 
 学習途中で `minikube` を途中で停止し後日再開する際、テキストエディタの操作方法を以下の手順で進めていくと学習を再開できます。
@@ -673,7 +697,9 @@ kubectl delete [-f <filename>] [TYPE/NAME] [-o [wide|yaml]]
 
 ![minikube-open-tips](/images/kubernetes-tutorial/minikube-open-tips.png)
 
-### 🎯 実践演習：Podの作成から削除まで
+---
+
+### 実践演習：Podの作成から削除まで
 
 作成手順で記載したコマンドを、実際に演習形式で進めていこうと思います。
 
@@ -785,7 +811,9 @@ No resources found in default namespace.
 root@minikube:~/tutorial#
 ```
 
-### 🃏 マニフェストファイルの種類
+---
+
+### マニフェストファイルの種類
 
 前段では、Podの作成・確認・削除を行いました。  
 ここでは、マニフェストファイルの種類について記載します。
@@ -876,12 +904,678 @@ spec:
 - envはcommandとargsの後に記載する。
 - 例題での設定では、コンテナ内で環境変数「DELAY」を5に設定している。
 
-### 👓️ kindに応じた apiVersion の確認
+---
+
+### kindに応じた apiVersion の確認
+
+再掲になりますが、マニフェストファイルには **kind に応じた apiVersion を指定** する必要があります。  
+そこで、kindに応じた apiVersion を確認する方法を記載します。
+
+結論になりますが、 Kubernetes公式ドキュメントの[Kubernetes APIリファレンス](https://kubernetes.io/docs/reference/kubernetes-api/)を参照すると確認できます。
+
+例えば前段でも記載した `pod.yml` の apiVersion は `v1` となっており、リファレンスでは下記に該当します。  
+[kubeconfig(v1)](https://kubernetes.io/docs/reference/config-api/kubeconfig.v1/)
+
+---
+
+### Pod に入ってコマンド実行
+
+起動中のコンテナへ入り、コンテナから出るためのコマンドを実行していきます。  
+各種コマンドは以下の通りです。
+
+**▼コンテナへ入る**:
+
+```bash
+kubectl exec -it POD sh
+```
+
+・引数  
+POD：中に入りたいPod名
+
+**▼コンテナから出る**:
+
+・プロセスを終了してからログアウト
+
+```bash
+exit
+```
+
+・プロセスを残したままコンテナからログアウト
+
+```bash
+[ctrl + P] + [ctrl + Q]
+```
+
+#### 演習
+
+**📖 演習内容**:
+
+```txt
+1. `CentOS` と `nginx` のコンテナを含むマニフェストファイルを作成
+2. `CentOS` と ``nginx` のPodを起動
+3. PodのIPアドレスを確認
+4. 起動した `CentOS` コンテナと `nginx` コンテナ内に入る
+5. コンテナから出る
+6. `CentOS` と ``nginx` のPodを削除
+```
+
+1.まずは任意のテキストエディタからSSHで接続し、マニフェストファイルを作成します。  
+※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pods.yml` を作成します。
+
+::: details tutorial/pods.yml
+
+```yaml:tutorial/pods.yml
+# CentOS Pod の定義
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug
+  namespace: default
+  labels:
+    env: test
+spec:
+  containers:
+    - name: debug
+      image: centos:7
+      command:
+        - sh    # シェルを起動
+        - -c    # コマンド文字列を実行するオプション
+      # commandに渡す引数
+      args:
+        - |
+          while true
+          do
+      # 環境変数DELAYの値だけスリープする
+            sleep ${DELAY}
+          done
+      # コンテナ内で使用する環境変数
+      env:
+        - name: "DELAY"
+          value: "5"
+
+---  # YAML文書の区切り文字
+
+# nginx Pod の定義
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: default
+  labels:
+    env: test
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx:1.17.2-alpine
+```
+
+:::
+
+**※注意**:  
+マニフェストファイルに複数の定義を記載する際、必ず **`---`** で区切る必要があります。  
+そうしなければ、リソースの作成が失敗しますのでご注意ください。
+
+2.作成したマニフェストファイルを起動させます。
+
+テキストエディタのコマンドラインから、下記コマンドを実行して `tutorial` ディレクトリに移動します:
+
+```bash
+root@minikube:~# cd tutorial/
+root@minikube:~/tutorial#
+```
+
+リソースの作成を実行します:
+
+```bash
+root@minikube:~/tutorial# kubectl apply -f pods.yml
+pod/debug created
+pod/nginx created
+root@minikube:~/tutorial#
+```
+
+3.作成したPodのIPアドレスを確認します。  
+`-o wide` オプションで、PodのIPアドレスを確認できます:
+
+```bash
+root@minikube:~/tutorial# kubectl get pod -o wide
+NAME    READY   STATUS             RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+debug   0/1     ImagePullBackOff   0          3m57s   10.244.0.18   minikube   <none>           <none>
+nginx   1/1     Running            0          3m57s   10.244.0.17   minikube   <none>           <none>
+root@minikube:~/tutorial#
+```
+
+4.次に、本題のコンテナへの入り方を記載します。  
+`debug` コンテナに入ります。
+
+```bash
+root@minikube:~/tutorial# kubectl exec -it debug sh
+error: exec [POD] [COMMAND] is not supported anymore. Use exec [POD] -- [COMMAND] instead
+See 'kubectl exec -h' for help and examples
+root@minikube:~/tutorial#
+```
+
+・・・？
+`kubectl exec` コマンドが使えないようです。
+これは、Kubernetes v1.24から 新しいバージョンのkubectlでは、コマンドの前に -- を付ける必要があるのだそうです。
+代わりに、`kubectl exec` コマンドの代わりに `kubectl exec -it POD sh` を使用します。
+これで、コンテナ内に入ることができます。
+
+```bash
+root@minikube:~/tutorial# kubectl exec -it debug -- sh
+sh-4.2#
+```
+
+入れました！
+`exit` コマンドでコンテナから出て、残りの `nginx` コンテナへのアクセスを確認します。
+
+```bash
+root@minikube:~/tutorial# kubectl exec -it nginx -- sh
+/ #
+```
+
+**補足：コンテナへ入る**:
+
+```bash
+kubectl exec -it POD -- sh
+```
+
+・引数  
+POD：中に入りたいPod名
+`--` は、コマンドの引数をPod内のシェルに渡すためのオプションです。
+`kubectl` execコマンドの構文変更について、詳細は[こちら](https://kubernetes.io/ja/docs/tasks/debug/debug-application/get-shell-running-container/)をご確認ください。
+
+````txt
+この変更は、Kubernetesのセキュリティと一貫性を向上させるために導入されました：
+
+- `--` はコマンドとオプションを明確に分離します
+- コマンドインジェクション攻撃のリスクを軽減します
+- 他のkubectlコマンドとの一貫性を保ちます```
+````
+
+5.コンテナから `exit` コマンドでコンテナから出ます。
+
+6.最後に、作成したPodを削除します。
+
+```bash
+root@minikube:~/tutorial# kubectl delete -f pods.yml
+pod "debug" deleted
+pod "nginx" deleted
+root@minikube:~/tutorial#
+```
+
+---
+
+### Pod とホスト間でのファイルのやり取り
+
+Pod内のファイルをホスト側にコピーするには、`kubectl cp` コマンドを使用します。
+下記はそれぞれのパターンでのコマンドの例です。
+共通して、PODNAMEの後には転送元と転送先のファイルパスを記載する前に、**`:`** を付けてください。
+
+**▼ホスト側のファイルをPod内にコピー**
+基本構文:
+
+```bash
+kubectl cp SRC PODNAME:DEST
+```
+
+・引数
+SRC: ホスト側のファイルのパス
+PODNAME: Podの名前
+DEST: Pod内のファイルのパス
+
+**▼Pod内のファイルをホスト側にコピー**
+基本構文:
+
+```bash
+kubectl cp PODNAME:SRC DEST
+```
+
+・引数
+PODNAME: Podの名前
+SRC: Pod内のファイルのパス
+DEST: ホスト側のファイルのパス
+
+**📖 演習内容**:
+
+```txt
+1. `CentOS` のコンテナを含むマニフェストファイルを作成
+2. `CentOS` のPodを起動
+3. `sample.txt` を、作成した `CentOS` コンテナ内の `/var/tmp` ディレクトリへ転送
+4. ログイン中のコンテナ内でファイルを作成して、ホスト側にコピー
+5. 作業後のPodを削除
+```
+
+1.まずは任意のテキストエディタからSSHで接続し、マニフェストファイルを作成します。
+※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pod.yml` と `sample.txt` を作成します。
+
+::: details tutorial/pod.yml, tutorial/sample.txt
+
+```yaml:tutorial/pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug
+  namespace: default
+  labels:
+    env: test
+spec:
+  containers:
+    - name: debug
+      image: centos:7
+      command:
+        - "sh"
+        - "-c"
+      args:
+        - |
+          while true
+          do
+            sleep ${DELAY}
+          done
+      env:
+        - name: "DELAY"
+          value: "5"
+```
+
+```txt:tutorial/sample.txt
+Hello World !
+```
+
+:::
+
+2.作成したマニフェストファイルを起動させます。
+テキストエディタのコマンドラインから、下記コマンドを実行して `tutorial` ディレクトリに移動します:
+
+```bash
+root@minikube:~# cd tutorial/
+root@minikube:~/tutorial#
+```
+
+リソースの作成を実行します:
+
+```bash
+root@minikube:~/tutorial# kubectl apply -f pod.yml
+pod/debug created
+root@minikube:~/tutorial#
+```
+
+作成できたことを念のため確認します:
+
+```bash
+root@minikube:~/tutorial# kubectl get pod
+NAME    READY   STATUS    RESTARTS   AGE
+debug   1/1     Running   0          85s
+root@minikube:~/tutorial#
+```
+
+3.ホスト内に作成した `sample.txt` を、作成した `CentOS` コンテナ内の `/var/tmp` ディレクトリへ転送します。
+わかりやすくするため、転送先のテキストファイル名を変更しています。
+
+```bash
+root@minikube:~/tutorial# kubectl cp ./sample.txt debug:/var/tmp/sample_transfer.txt
+root@minikube:~/tutorial#
+```
+
+コンテナ内に入り、ファイルが転送されたことを確認します。
+
+```bash
+root@minikube:~/tutorial# kubectl exec -it debug -- sh
+sh-4.2# ls /var/tmp/sample_transfer.txt
+/var/tmp/sample_transfer.txt
+sh-4.2#
+```
+
+4.ログイン中のコンテナ内でファイルを作成して、ホスト側にコピーします。
+手順としては、空ファイルを作成して `vi` コマンドで `Received Successfully!` と記載します。
+その後にコンテナから抜けて、ホスト側にコピーします。
+
+```bash
+sh-4.2# ~
+sh-4.2# touch /var/tmp/sample_receive.txt
+sh-4.2# ls /var/tmp/sample_receive.txt
+/var/tmp/sample_receive.txt
+sh-4.2# vi /var/tmp/sample_receive.txt
+sh-4.2# cat /var/tmp/sample_receive.txt
+Received Successfully!
+sh-4.2# exit
+exit
+root@minikube:~/tutorial# kubectl cp debug:/var/tmp/sample_receive.txt ./sample_receive.txt
+tar: Removing leading `/' from member names
+root@minikube:~/tutorial# cat ./sample_receive.txt
+Received Successfully!
+root@minikube:~/tutorial#
+```
+
+5.最後に、作成したPodを削除します。
+
+```bash
+root@minikube:~/tutorial# kubectl delete -f pod.yml
+pod "debug" deleted
+root@minikube:~/tutorial#
+```
+
+---
+
+### 状態/ログの確認
+
+状態を確認する際は、`kubectl describe` コマンドを使用します。
+
+**▼Podの状態を確認**
+基本構文:
+
+```bash
+kubectl describe [TYPE/NAME]
+```
+
+・引数
+TYPE: リソースの種類
+NAME: リソースの名前
+
+**▼ログの詳細を確認**
+基本構文:
+
+```bash
+kubectl logs [TYPE/NAME] [--tail=n]
+```
+
+・引数
+TYPE: リソースの種類
+NAME: リソースの名前
+--tail=n: ログの最後からn行を表示
+
+**▼Podのログを確認**
+基本構文:
+
+```bash
+kubectl logs [POD]
+```
+
+・引数
+POD: Podの名前
+
+**📖 演習内容**:
+
+```txt
+1. `CentOS` と `nginx` のコンテナを含むマニフェストファイルを作成し起動
+2. `CentOS` と `nginx` のPodの状態を確認
+3. `CentOS` に入る
+4. `curl` コマンドを実行して `nginx` のコンテナにアクセス
+5. `CentOS` から出る
+6. `nginx` のPodのログを確認
+7. `nginx` のPodを削除
+```
+
+1.`CentOS` と `nginx` のコンテナを含むマニフェストファイルを作成し起動します。
+※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pods.yml` を作成します。
+::: details tutorial/pods.yml
+
+```yaml:tutorial/pods.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug
+  namespace: default
+spec:
+  containers:
+    - name: debug
+      image: centos:7
+      command:
+        - "sh"
+        - "-c"
+      args:
+        - |
+          while true
+          do
+            sleep ${DELAY}
+          done
+      env:
+        - name: "DELAY"
+          value: "86400"
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.17.2-alpine
+```
+
+:::
+
+起動します。
+
+```bash
+root@minikube:~/tutorial# kubectl apply -f pods.yml
+pod/debug created
+pod/nginx created
+root@minikube:~/tutorial#
+```
+
+2.作成したPodの状態を確認します。
+手始めに、 `debug` のPodの状態を確認します。
+
+::: details kubectl describe pod/debug
+
+```bash
+root@minikube:~/tutorial# kubectl describe pod/debug
+Name:             debug
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 30 May 2025 12:45:04 +0000
+Labels:           <none>
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.26
+IPs:
+  IP:  10.244.0.26
+Containers:
+  debug:
+    Container ID:  docker://c0da926ebe2fc2b33718b24d2edf01480554e005fd0f2a3b770ede18b6641110
+    Image:         centos:7
+    Image ID:      docker-pullable://centos@sha256:be65f488b7764ad3638f236b7b515b3678369a5124c47b8d32916d6487418ea4
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+    Args:
+      while true
+      do
+        sleep ${DELAY}
+      done
+
+    State:          Running
+      Started:      Fri, 30 May 2025 12:45:05 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      DELAY:  86400
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-bfm2w (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-bfm2w:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  115s  default-scheduler  Successfully assigned default/debug to minikube
+  Normal  Pulled     115s  kubelet            Container image "centos:7" already present on machine
+  Normal  Created    115s  kubelet            Created container: debug
+  Normal  Started    115s  kubelet            Started container debug
+root@minikube:~/tutorial# nning   0          10s
+root@minikube:~/
+```
+
+:::
+
+`Events` の部分に注目すると、Podの作成・起動・終了などのイベントが記載されていることがわかると思います。
+次に、 `nginx` のPodの状態を確認します。
+
+::: details kubectl describe pod/nginx
+
+```bash
+root@minikube:~/tutorial# kubectl describe pod/nginx
+Name:             nginx
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Fri, 30 May 2025 12:45:04 +0000
+Labels:           <none>
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.25
+IPs:
+  IP:  10.244.0.25
+Containers:
+  nginx:
+    Container ID:   docker://d8de6b8d4ccfce54ac151c3480204162fc57458c4075a699a456b522d2d00cdb
+    Image:          nginx:1.17.2-alpine
+    Image ID:       docker-pullable://nginx@sha256:482ead44b2203fa32b3390abdaf97cbdc8ad15c07fb03a3e68d7c35a19ad7595
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 30 May 2025 12:45:05 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-v2j8z (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-v2j8z:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  4m15s  default-scheduler  Successfully assigned default/nginx to minikube
+  Normal  Pulled     4m15s  kubelet            Container image "nginx:1.17.2-alpine" already present on machine
+  Normal  Created    4m15s  kubelet            Created container: nginx
+  Normal  Started    4m15s  kubelet            Started container nginx
+root@minikube:~/tutorial#
+```
+
+:::
+
+`debug` のPodと同様に、`nginx` のPodの状態も確認できました。
+
+3.`CentOS` のPodに接続して `nginx` へアクセスしてアクセスログを見てみます。
+その前に、作成したコンテナのIPアドレスを確認します。
+
+```bash
+root@minikube:~/tutorial# kubectl get pod -o wide
+NAME    READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+debug   1/1     Running   0          8m57s   10.244.0.26   minikube   <none>           <none>
+nginx   1/1     Running   0          8m57s   10.244.0.25   minikube   <none>           <none>
+root@minikube:~/tutorial#
+```
+
+本題の`CentOS` のPodに接続して `nginx` へアクセスしてアクセスログを見てみます。
+
+```bash
+root@minikube:~/tutorial# kubectl exec -it debug -- sh
+sh-4.2#
+```
+
+`nginx` へアクセスしてアクセスログを見てみます。
+
+::: details curl実行結果
+
+```bash
+sh-4.2# curl 10.244.0.25
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+sh-4.2#
+```
+
+:::
+
+アクセス成功です！
+
+5.6. コンテナから出て、`nginx` のPodの状態を確認します。
+
+```bash
+sh-4.2# exit
+exit
+root@minikube:~/tutorial# kubectl logs pod/nginx
+10.244.0.26 - - [30/May/2025:12:55:58 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.29.0" "-"
+root@minikube:~/tutorial#
+```
+
+`nginx` のPodのアクセスログが確認できました。
+
+7.Podを削除します。
+
+```bash
+root@minikube:~/tutorial# kubectl delete -f pods.yml
+pod "debug" deleted
+pod "nginx" deleted
+root@minikube:~/tutorial#
+```
+
+## 📕 Kubernetesリソース
 
 <!-- ## ※ここから続き -->
 
 ## 🎉 まとめ
 
+長い時間ご覧いただき、ありがとうございました。
 この記事では、Kubernetesの基本概念から実際のハンズオンまでを通して学習しました。
 
 **学習した内容**:
@@ -894,4 +1588,4 @@ spec:
 
 Kubernetesは学習コストが高いツールですが、コンテナオーケストレーションにおいて非常に強力な機能を提供します。今回の基礎学習を土台に、さらに深い理解を目指していきたいと思います。
 
-次回は、ReplicaSetやDeploymentなど、より実践的なリソースについて学習予定です。
+次回は、より実践的なリソースについて学習しアウトプットしていく予定です。
