@@ -923,7 +923,9 @@ spec:
 起動中のコンテナへ入り、コンテナから出るためのコマンドを実行していきます。  
 各種コマンドは以下の通りです。
 
-**▼コンテナへ入る**:
+**▼コンテナへ入る**:  
+この構文は以前のバージョンの構文のため誤りとなります。
+最新バージョンの構文は後述で記載しますので、下記はとりあえず無視してください🙇‍♂️
 
 ```bash
 kubectl exec -it POD sh
@@ -1056,8 +1058,8 @@ root@minikube:~/tutorial#
 
 ・・・？
 `kubectl exec` コマンドが使えないようです。
-これは、Kubernetes v1.24から 新しいバージョンのkubectlでは、コマンドの前に -- を付ける必要があるのだそうです。
-代わりに、`kubectl exec` コマンドの代わりに `kubectl exec -it POD sh` を使用します。
+これは、Kubernetes v1.24から 新しいバージョンのkubectlでは、コマンドの前に `--` を付ける必要があるのだそうです。
+代わりに、`kubectl exec` コマンドの代わりに `kubectl exec -it POD -- ssh` を使用します。
 これで、コンテナ内に入ることができます。
 
 ```bash
@@ -1073,7 +1075,7 @@ root@minikube:~/tutorial# kubectl exec -it nginx -- sh
 / #
 ```
 
-**補足：コンテナへ入る**:
+**補足：コンテナへ入る(最新バージョン)**:
 
 ```bash
 kubectl exec -it POD -- sh
@@ -1082,7 +1084,7 @@ kubectl exec -it POD -- sh
 ・引数  
 POD：中に入りたいPod名
 `--` は、コマンドの引数をPod内のシェルに渡すためのオプションです。
-`kubectl` execコマンドの構文変更について、詳細は[こちら](https://kubernetes.io/ja/docs/tasks/debug/debug-application/get-shell-running-container/)をご確認ください。
+`kubectl exec` コマンドの構文変更について、詳細は[こちら](https://kubernetes.io/ja/docs/tasks/debug/debug-application/get-shell-running-container/)をご確認ください。
 
 ````txt
 この変更は、Kubernetesのセキュリティと一貫性を向上させるために導入されました：
@@ -1570,6 +1572,40 @@ root@minikube:~/tutorial#
 ```
 
 ## 📕 Kubernetesリソース
+
+### Pod
+
+---
+
+### ReplicaSet
+
+---
+
+### Deployment
+
+---
+
+### Service
+
+---
+
+### ConfigMap
+
+---
+
+### Secret
+
+---
+
+### 永続データ (PersistentVolume, PersistentVolumeClaim)
+
+---
+
+### StatefulSet
+
+---
+
+### Ingress
 
 <!-- ## ※ここから続き -->
 
