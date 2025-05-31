@@ -220,7 +220,7 @@ W0525 17:12:44.569404   62706 main.go:292] Try running `docker context use defau
 
 Docker Desktop ＞ Container を確認すると、 `minikube` が起動できていることが確認できました。
 
-## ![Docker Desktop](/images/kubernetes-tutorial/DockerDesktop.png)
+![Docker Desktop](/images/kubernetes-tutorial/DockerDesktop.png)
 
 ### Remote SSH接続の設定
 
@@ -1573,7 +1573,156 @@ root@minikube:~/tutorial#
 
 ## 📕 Kubernetesリソース
 
+リソースについては 「📋 Kubernetesリソースの理解」 の章でも記載しましたが、改めて詳細の説明を記載したいと思います。
+
 ### Pod
+
+`Pod` とは、Kubernetesの最小単位のリソースです。
+詳細については、以下の通りになります。
+
+- Dockerコンテナの集合体
+- デプロイメントやステートフルセットなどのリソースの最小単位
+- Pod内のコンテナのライフサイクルを管理する
+- 1つ以上のコンテナを含むことができる
+- ネットワークとストレージを共有する
+- ノード間で移動することができる
+
+下記 pod.yml の例を見てみましょう。
+
+```yaml:pod.yml
+apiVersion: v1
+kind: Pod
+
+〜省略〜
+
+spec:
+  containers:
+  - name: nginx
+  image: nginx:1.17.2-alpine
+  imaagePullPolicy: never
+  command: ["sh", "-c"]
+  args:
+  - |
+    echo ${MESSAGE}
+  env: [{name: MESSAGE, value: "Hello World!"}]
+    volumeMounts:
+    - name: storage
+      mountPath: /home/nginx
+  volumes:
+  - name: storage
+    hostPath:
+      path: "/data/storage"
+      type: Directory
+```
+
+マニフェストファイルの書き方については以下の通りになり、主要な spec は `containers` と `volumes` です。
+例題について細かく分解して見ていきたいと思います。
+
+**※下記はあくまで一例であり、調べてみた結果他にも種類がありました。**
+**その他の種類については公式ドキュメントを参照してください。**
+[Kubernetes公式ドキュメント：containers(英語)](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+[Kubernetes公式ドキュメント：volumes](https://kubernetes.io/ja/docs/concepts/storage/volumes/)
+
+**containers**:
+
+- `spec.containers.name`：コンテナ名を指定
+- `spec.containers.image`：コンテナイメージを指定
+- `spec.containers.imagePullPolicy`：コンテナイメージの取得方法を指定
+  - `always` は常にイメージを取得する
+  - `never` はイメージを取得しない
+  - `ifNotPresent` はローカルにイメージがない場合のみ取得する
+- `spec.containers.command`：コンテナ起動時に実行するコマンドを指定
+- `spec.containers.args`：コンテナ起動時に実行するコマンドの引数を指定
+- `spec.containers.env`：コンテナ内で使用する環境変数を指定
+- `spec.containers.volumeMounts`：コンテナ内で使用するボリュームを指定
+- `spec.volumes`：コンテナ内で使用するボリュームを指定
+- `spec.volumes.name`：ボリューム名を指定
+- `spec.volumes.mountPath`：ボリュームをマウントするパスを指定
+
+**volumes**:
+
+- `spec.volumes.name`：ボリューム名を指定
+- `spec.volumes.hostPath`：ボリュームのパスを指定
+- `spec.volumes.hostPath.path`：ボリュームのパスを指定
+- `spec.volumes.hostPath.type`：ボリュームのタイプを指定
+
+#### 演習
+
+```txt
+1. ホストにフォルダとファイルを作成
+2. 作成したフォルダをマウントしたPodマニフェストファイルを作成
+3. リソース作成
+```
+
+1.まずはKubernetesのホストにフォルダとファイルを作成します。
+
+```bash
+root@minikube:~# mkdir /data/strage
+root@minikube:~# ls /data/
+strage
+root@minikube:~#
+```
+
+2.作成した `/data/strage` をマウントするようなPodマニフェストファイルを作成します。
+作成対象のファイルを格納するディレクトリは、いつも通り `tutorial` ディレクトリにします。
+
+```yaml:tutorial/pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.17.2-alpine
+    volumeMounts:
+    - name: storage
+      mountPath: /home/nginx
+  volumes:
+  - name: storage
+    hostPath:
+      path: "/data/storage"
+      type: Directory
+```
+
+リソース作成前に、1.で作成したディレクトリ直下にファイルを作成して、 `/home/nginx` から作成したファイルを参照できるか確認してみます。
+対象のディレクトリ `/data/storage` に移動し、 配下に `message` ファイルを作成し、内容は `Hello World!` とします。
+
+```bash
+root@minikube:~# cd /data/storage/
+root@minikube:/data/storage# vi message
+root@minikube:/data/storage# cat message
+Hello World!
+root@minikube:/data/storage#
+```
+
+3.リソースを作成し、作成したPodに接続してファイルの内容を確認します。
+まずは `tutorial` ディレクトリに移動し、リソースを作成してコンテナ内に接続します。
+
+```bash
+root@minikube:~# cd tutorial/
+root@minikube:~/tutorial# kubectl apply -f pod.yml
+pod/sample created
+root@minikube:~/tutorial# kubectl get pod
+NAME     READY   STATUS    RESTARTS   AGE
+sample   1/1     Running   0          13s
+root@minikube:~/tutorial# kubectl exec -it sample -- sh
+/ #
+```
+
+`/home/nginx` にマウントしたディレクトリに移動し、ファイルの内容を確認します。
+
+```bash
+/ # cd /home/nginx/
+/home/nginx # ls
+message
+/home/nginx # cat message
+HEllo World!
+/home/nginx #
+```
+
+ファイルの内容が確認できました。
+演習としては完了なので、コンテナから抜けてPodを削除します。
 
 ---
 
