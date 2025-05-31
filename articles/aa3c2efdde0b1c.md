@@ -742,6 +742,8 @@ root@minikube:~#
 
 `tutorial` 直下に `pod.yml` を作成します。
 
+:::details pod.yml
+
 ```yaml:tutorial/pod.yml
 # Kubernetes APIのバージョンを指定（Pod リソースはv1）
 apiVersion: v1
@@ -766,6 +768,8 @@ spec:
       # 使用するDockerイメージとタグ
       image: nginx:1.17.2-alpine
 ```
+
+:::
 
 #### Step 2: Podの起動確認
 
@@ -872,6 +876,8 @@ spec:
 
 例題には記載しておりませんが、コンテナの設定には以下のようなものがあります。
 
+::: details pod.yml
+
 ```yaml:pod.yml
 〜説明用のため、specから上は省略〜
 spec:
@@ -886,6 +892,8 @@ spec:
       - name: "DELAY"
         value: "5"
 ```
+
+:::
 
 #### command と args
 
@@ -1589,7 +1597,8 @@ root@minikube:~/tutorial#
 - ネットワークとストレージを共有する
 - ノード間で移動することができる
 
-下記 pod.yml の例を見てみましょう。
+下記 pod.yml の例を見てみましょう。  
+::: details pod.yml
 
 ```yaml:pod.yml
 apiVersion: v1
@@ -1616,6 +1625,8 @@ spec:
       path: "/data/storage"
       type: Directory
 ```
+
+:::
 
 マニフェストファイルの書き方については以下の通りになり、主要な spec は `containers` と `volumes` です。  
 例題について細かく分解して見ていきたいと思います。
@@ -1668,6 +1679,8 @@ root@minikube:~#
 2.作成した `/data/strage` をマウントするようなPodマニフェストファイルを作成します。  
 作成対象のファイルを格納するディレクトリは、いつも通り `tutorial` ディレクトリにします。
 
+::: details tutorial/pod.yml
+
 ```yaml:tutorial/pod.yml
 apiVersion: v1
 kind: Pod
@@ -1686,6 +1699,8 @@ spec:
       path: "/data/storage"
       type: Directory
 ```
+
+:::
 
 リソース作成前に、1.で作成したディレクトリ直下にファイルを作成して、 `/home/nginx` から作成したファイルを参照できるか確認してみます。  
 対象のディレクトリ `/data/storage` に移動し、 配下に `message` ファイルを作成し、内容は `Hello World!` とします。
@@ -1729,6 +1744,185 @@ HEllo World!
 ---
 
 ### ReplicaSet
+
+`ReplicaSet` とは、Podのレプリカを管理するためのリソースです。  
+詳細については、以下の通りになります。
+
+- Podのレプリカを管理する
+- Podの数を指定することができる
+- Podのスケールアウト・スケールインを自動で行う
+- Podのステータスを監視する
+- Podのステータスが変化した場合に、指定した数のPodを自動で起動する
+  - 例えば、Podが異常終了した場合に、指定した数のPodを自動で起動する
+
+下記 replicaset.yml の例を見てみましょう。  
+:::details tutorial/replicaset.yml
+
+```yaml:replicaset.yml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+      env: test
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: web
+        env: test
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17.2-alpine
+```
+
+:::
+
+マニフェストファイルの書き方については以下の通りになり、主要な spec は `replicas` 、 `selector` 、 `template` です。  
+例題について細かく分解して見ていきたいと思います。  
+[Kubernetes公式ドキュメント：ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+
+**replicas**:
+
+- `spec.replicas`：Podを複製する数を指定
+
+**selector**:
+
+- `spec.selector`：Podのラベルを指定
+
+**template**:
+
+- `spec.template`：Podのテンプレートを指定
+- `spec.template.metadata`：Podのメタデータを指定
+- `spec.template.metadata.name`：Podの名前を指定
+- `spec.template.metadata.labels`：Podのラベルを指定
+- `spec.template.spec`：Podの仕様を指定
+- `spec.template.spec.containers`：Pod内のコンテナを指定
+- `spec.template.spec.containers.name`：コンテナ名を指定
+- `spec.template.spec.containers.image`：コンテナイメージを指定
+
+#### 演習
+
+```txt
+1. ReplicaSetマニフェストファイルを作成
+2. リソース作成
+3. 手動でスケールアウト(構築するサーバーの台数を増やす)
+```
+
+1.まずは `tutorial` ディレクトリに移動し、ReplicaSetマニフェストファイルを作成します。
+::: details tutorial/replicaset.yml
+
+```yaml:tutorial/replicaset.yml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+      env: test
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: web
+        env: test
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17.2-alpine
+```
+
+:::
+
+2.リソースを作成します。
+
+```bash
+root@minikube:~/tutorial# kubectl apply -f replicaset.yml
+replicaset.apps/nginx created
+root@minikube:~/tutorial#
+```
+
+出力結果から、3つのPodが作成されていることが確認できます。  
+また、 `kubectl get all` コマンドですべてのリソースの状態を確認することができます。
+
+```bash
+root@minikube:~/tutorial# kubectl get all
+NAME              READY   STATUS    RESTARTS   AGE
+pod/nginx-mp4bl   1/1     Running   0          60m
+pod/nginx-rnfsx   1/1     Running   0          60m
+pod/nginx-wl77v   1/1     Running   0          60m
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6d2h
+
+NAME                    DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx   3         3         3       60m
+root@minikube:~/tutorial#
+```
+
+3.手動でスケールアウトします。  
+方法としては、マニフェストファイルを編集し、 `replicas` の値を変更します。
+ここでは、 `replicas` の値を `5` に変更します。
+
+::: details tutorial/replicaset.yml
+
+```yaml:tutorial/replicaset.yml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx
+spec:
+  replicas: 5 # 3 -> 5 に変更
+  selector:
+    matchLabels:
+      app: web
+      env: test
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: web
+        env: test
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17.2-alpine
+```
+
+:::
+
+変更したマニフェストファイルを適用し、リソースを再度作成します。
+
+```bash
+root@minikube:~/tutorial# kubectl apply -f replicaset.yml
+replicaset.apps/nginx configured
+root@minikube:~/tutorial# kubectl get all
+NAME              READY   STATUS    RESTARTS   AGE
+pod/nginx-9n9bs   1/1     Running   0          13s
+pod/nginx-dlbw2   1/1     Running   0          13s
+pod/nginx-mp4bl   1/1     Running   0          64m
+pod/nginx-rnfsx   1/1     Running   0          64m
+pod/nginx-wl77v   1/1     Running   0          64m
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6d2h
+
+NAME                    DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx   5         5         5       64m
+root@minikube:~/tutorial#
+```
+
+出力結果より、Podが5つになっていることが確認できます。  
+このように、ReplicaSetを使うことで、Podの数を簡単に増減させることができます。  
+最後に、リソースを削除して終了します。
 
 ---
 
