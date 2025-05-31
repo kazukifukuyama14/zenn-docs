@@ -26,10 +26,10 @@ Dockerはコンテナを作成・管理するために必要です。
 
 ### IDE（開発環境）
 
-Visual Studio Codeなど慣れているものでいいとは思いますが、私はCursorを使用していきます。
+Visual Studio Codeなど慣れているものでいいとは思いますが、私はCursorを使用していきます。  
 <https://www.cursor.com/ja>
 
-また、テキストエディタには拡張機能「**Remote SSH**」が必要ですのでそちらをインストールしておきます。
+また、テキストエディタには拡張機能「**Remote SSH**」が必要ですのでそちらをインストールしておきます。  
 <https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh>
 
 ---
@@ -924,8 +924,8 @@ spec:
 各種コマンドは以下の通りです。
 
 **▼コンテナへ入る**:  
-この構文は以前のバージョンの構文のため誤りとなります。
-最新バージョンの構文は後述で記載しますので、下記はとりあえず無視してください🙇‍♂️
+この構文は以前のバージョンの構文のため誤りとなります。  
+最新バージョンの構文は後述で記載しますので、下記は無視してください🙇‍♂️
 
 ```bash
 kubectl exec -it POD sh
@@ -1057,17 +1057,17 @@ root@minikube:~/tutorial#
 ```
 
 ・・・？
-`kubectl exec` コマンドが使えないようです。
-これは、Kubernetes v1.24から 新しいバージョンのkubectlでは、コマンドの前に `--` を付ける必要があるのだそうです。
-代わりに、`kubectl exec` コマンドの代わりに `kubectl exec -it POD -- ssh` を使用します。
-これで、コンテナ内に入ることができます。
+`kubectl exec` コマンドが使えないようです。  
+これは、Kubernetes v1.24から 新しいバージョンのkubectlでは、コマンドの前に `--` を付ける必要があるのだそうです。  
+代わりに、`kubectl exec` コマンドの代わりに `kubectl exec -it POD -- ssh` を使用します。  
+これで、コンテナ内に入ることがでるはずです。
 
 ```bash
 root@minikube:~/tutorial# kubectl exec -it debug -- sh
 sh-4.2#
 ```
 
-入れました！
+入れました！  
 `exit` コマンドでコンテナから出て、残りの `nginx` コンテナへのアクセスを確認します。
 
 ```bash
@@ -1083,6 +1083,7 @@ kubectl exec -it POD -- sh
 
 ・引数  
 POD：中に入りたいPod名
+
 `--` は、コマンドの引数をPod内のシェルに渡すためのオプションです。
 `kubectl exec` コマンドの構文変更について、詳細は[こちら](https://kubernetes.io/ja/docs/tasks/debug/debug-application/get-shell-running-container/)をご確認ください。
 
@@ -1109,8 +1110,8 @@ root@minikube:~/tutorial#
 
 ### Pod とホスト間でのファイルのやり取り
 
-Pod内のファイルをホスト側にコピーするには、`kubectl cp` コマンドを使用します。
-下記はそれぞれのパターンでのコマンドの例です。
+Pod内のファイルをホスト側にコピーするには、`kubectl cp` コマンドを使用します。  
+下記はそれぞれのパターンでのコマンドの例です。  
 共通して、PODNAMEの後には転送元と転送先のファイルパスを記載する前に、**`:`** を付けてください。
 
 **▼ホスト側のファイルをPod内にコピー**
@@ -1147,7 +1148,7 @@ DEST: ホスト側のファイルのパス
 5. 作業後のPodを削除
 ```
 
-1.まずは任意のテキストエディタからSSHで接続し、マニフェストファイルを作成します。
+1.まずは任意のテキストエディタからSSHで接続し、マニフェストファイルを作成します。  
 ※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pod.yml` と `sample.txt` を作成します。
 
 ::: details tutorial/pod.yml, tutorial/sample.txt
@@ -1184,7 +1185,7 @@ Hello World !
 
 :::
 
-2.作成したマニフェストファイルを起動させます。
+2.作成したマニフェストファイルを起動させます。  
 テキストエディタのコマンドラインから、下記コマンドを実行して `tutorial` ディレクトリに移動します:
 
 ```bash
@@ -1209,7 +1210,7 @@ debug   1/1     Running   0          85s
 root@minikube:~/tutorial#
 ```
 
-3.ホスト内に作成した `sample.txt` を、作成した `CentOS` コンテナ内の `/var/tmp` ディレクトリへ転送します。
+3.ホスト内に作成した `sample.txt` を、作成した `CentOS` コンテナ内の `/var/tmp` ディレクトリへ転送します。  
 わかりやすくするため、転送先のテキストファイル名を変更しています。
 
 ```bash
@@ -1226,8 +1227,8 @@ sh-4.2# ls /var/tmp/sample_transfer.txt
 sh-4.2#
 ```
 
-4.ログイン中のコンテナ内でファイルを作成して、ホスト側にコピーします。
-手順としては、空ファイルを作成して `vi` コマンドで `Received Successfully!` と記載します。
+4.ログイン中のコンテナ内でファイルを作成して、ホスト側にコピーします。  
+手順としては、空ファイルを作成して `vi` コマンドで `Received Successfully!` と記載します。  
 その後にコンテナから抜けて、ホスト側にコピーします。
 
 ```bash
@@ -1306,8 +1307,9 @@ POD: Podの名前
 7. `nginx` のPodを削除
 ```
 
-1.`CentOS` と `nginx` のコンテナを含むマニフェストファイルを作成し起動します。
+1.`CentOS` と `nginx` のコンテナを含むマニフェストファイルを作成し起動します。  
 ※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pods.yml` を作成します。
+
 ::: details tutorial/pods.yml
 
 ```yaml:tutorial/pods.yml
@@ -1355,7 +1357,7 @@ pod/nginx created
 root@minikube:~/tutorial#
 ```
 
-2.作成したPodの状態を確認します。
+2.作成したPodの状態を確認します。  
 手始めに、 `debug` のPodの状態を確認します。
 
 ::: details kubectl describe pod/debug
@@ -1429,7 +1431,7 @@ root@minikube:~/
 
 :::
 
-`Events` の部分に注目すると、Podの作成・起動・終了などのイベントが記載されていることがわかると思います。
+`Events` の部分に注目すると、Podの作成・起動・終了などのイベントが記載されていることがわかると思います。  
 次に、 `nginx` のPodの状態を確認します。
 
 ::: details kubectl describe pod/nginx
@@ -1494,7 +1496,7 @@ root@minikube:~/tutorial#
 
 `debug` のPodと同様に、`nginx` のPodの状態も確認できました。
 
-3.`CentOS` のPodに接続して `nginx` へアクセスしてアクセスログを見てみます。
+3.`CentOS` のPodに接続して `nginx` へアクセスしてアクセスログを見てみます。  
 その前に、作成したコンテナのIPアドレスを確認します。
 
 ```bash
@@ -1577,7 +1579,7 @@ root@minikube:~/tutorial#
 
 ### Pod
 
-`Pod` とは、Kubernetesの最小単位のリソースです。
+`Pod` とは、Kubernetesの最小単位のリソースです。  
 詳細については、以下の通りになります。
 
 - Dockerコンテナの集合体
@@ -1615,12 +1617,12 @@ spec:
       type: Directory
 ```
 
-マニフェストファイルの書き方については以下の通りになり、主要な spec は `containers` と `volumes` です。
+マニフェストファイルの書き方については以下の通りになり、主要な spec は `containers` と `volumes` です。  
 例題について細かく分解して見ていきたいと思います。
 
-**※下記はあくまで一例であり、調べてみた結果他にも種類がありました。**
-**その他の種類については公式ドキュメントを参照してください。**
-[Kubernetes公式ドキュメント：containers(英語)](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+**※下記はあくまで一例であり、調べてみた結果他にも種類がありました。**  
+**その他の種類については公式ドキュメントを参照してください。**  
+[Kubernetes公式ドキュメント：containers(英語)](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)  
 [Kubernetes公式ドキュメント：volumes](https://kubernetes.io/ja/docs/concepts/storage/volumes/)
 
 **containers**:
@@ -1663,7 +1665,7 @@ strage
 root@minikube:~#
 ```
 
-2.作成した `/data/strage` をマウントするようなPodマニフェストファイルを作成します。
+2.作成した `/data/strage` をマウントするようなPodマニフェストファイルを作成します。  
 作成対象のファイルを格納するディレクトリは、いつも通り `tutorial` ディレクトリにします。
 
 ```yaml:tutorial/pod.yml
@@ -1685,7 +1687,7 @@ spec:
       type: Directory
 ```
 
-リソース作成前に、1.で作成したディレクトリ直下にファイルを作成して、 `/home/nginx` から作成したファイルを参照できるか確認してみます。
+リソース作成前に、1.で作成したディレクトリ直下にファイルを作成して、 `/home/nginx` から作成したファイルを参照できるか確認してみます。  
 対象のディレクトリ `/data/storage` に移動し、 配下に `message` ファイルを作成し、内容は `Hello World!` とします。
 
 ```bash
@@ -1696,7 +1698,7 @@ Hello World!
 root@minikube:/data/storage#
 ```
 
-3.リソースを作成し、作成したPodに接続してファイルの内容を確認します。
+3.リソースを作成し、作成したPodに接続してファイルの内容を確認します。  
 まずは `tutorial` ディレクトリに移動し、リソースを作成してコンテナ内に接続します。
 
 ```bash
@@ -1721,7 +1723,7 @@ HEllo World!
 /home/nginx #
 ```
 
-ファイルの内容が確認できました。
+ファイルの内容が確認できました。  
 演習としては完了なので、コンテナから抜けてPodを削除します。
 
 ---
