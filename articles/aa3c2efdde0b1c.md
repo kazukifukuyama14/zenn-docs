@@ -1065,9 +1065,10 @@ root@minikube:~/tutorial#
 ```
 
 ・・・？
+エラーが出てしまいました。  
 `kubectl exec` コマンドが使えないようです。  
 これは、Kubernetes v1.24から 新しいバージョンのkubectlでは、コマンドの前に `--` を付ける必要があるのだそうです。  
-代わりに、`kubectl exec` コマンドの代わりに `kubectl exec -it POD -- ssh` を使用します。  
+`kubectl exec -it POD sh` コマンドの代わりに、 `kubectl exec -it POD -- ssh` を使用します。  
 これで、コンテナ内に入ることがでるはずです。
 
 ```bash
@@ -1092,16 +1093,16 @@ kubectl exec -it POD -- sh
 ・引数  
 POD：中に入りたいPod名
 
-`--` は、コマンドの引数をPod内のシェルに渡すためのオプションです。
+`--` は、**コマンドの引数をPod内のシェルに渡すためのオプションです**。
 `kubectl exec` コマンドの構文変更について、詳細は[こちら](https://kubernetes.io/ja/docs/tasks/debug/debug-application/get-shell-running-container/)をご確認ください。
 
-````txt
+```txt
 この変更は、Kubernetesのセキュリティと一貫性を向上させるために導入されました：
 
 - `--` はコマンドとオプションを明確に分離します
 - コマンドインジェクション攻撃のリスクを軽減します
-- 他のkubectlコマンドとの一貫性を保ちます```
-````
+- 他のkubectlコマンドとの一貫性を保ちます
+```
 
 5.コンテナから `exit` コマンドでコンテナから出ます。
 
