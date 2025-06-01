@@ -235,7 +235,7 @@ ifconfig
 
 Remote SSHのconfig設定は、以下で進めていきます。
 
-```config
+```config:config
 Host minikube
     HostName 127.0.0.1
     User root
@@ -466,7 +466,7 @@ Kubernetesの主なリソースは以下の通りとなります。
 
 **負荷分散の例**:
 
-```txt
+```txt:演習
 クライアント → L7ロードバランサー → サーバー群
             (URL、ヘッダー等で振り分け)
 ```
@@ -624,7 +624,7 @@ Kubernetesには、2つの異なるネットワークが存在しています。
 「**定義作成**」　→　「**定義適用**」  
 の順で作成していきます。
 
-```text
+```txt:作成手順
 マニフェストファイル作成：YAMLファイルを作成
 ↓
 Kubernetes反映：kubectlコマンドを利用して反映
@@ -940,7 +940,7 @@ kubectl exec -it POD sh
 ```
 
 ・引数  
-POD：中に入りたいPod名
+`POD`：中に入りたいPod名
 
 **▼コンテナから出る**:
 
@@ -960,7 +960,7 @@ exit
 
 **📖 演習内容**:
 
-```txt
+```txt:演習
 1. `CentOS` と `nginx` のコンテナを含むマニフェストファイルを作成
 2. `CentOS` と ``nginx` のPodを起動
 3. PodのIPアドレスを確認
@@ -1091,12 +1091,12 @@ kubectl exec -it POD -- sh
 ```
 
 ・引数  
-POD：中に入りたいPod名
+`POD`：中に入りたいPod名
 
 `--` は、**コマンドの引数をPod内のシェルに渡すためのオプションです**。
 `kubectl exec` コマンドの構文変更について、詳細は[こちら](https://kubernetes.io/ja/docs/tasks/debug/debug-application/get-shell-running-container/)をご確認ください。
 
-```txt
+```txt:説明
 この変更は、Kubernetesのセキュリティと一貫性を向上させるために導入されました：
 
 - `--` はコマンドとオプションを明確に分離します
@@ -1131,9 +1131,9 @@ kubectl cp SRC PODNAME:DEST
 ```
 
 ・引数
-SRC: ホスト側のファイルのパス
-PODNAME: Podの名前
-DEST: Pod内のファイルのパス
+`SRC`: ホスト側のファイルのパス  
+`PODNAME`: Podの名前  
+`DEST`: Pod内のファイルのパス
 
 **▼Pod内のファイルをホスト側にコピー**
 基本構文:
@@ -1143,13 +1143,13 @@ kubectl cp PODNAME:SRC DEST
 ```
 
 ・引数
-PODNAME: Podの名前
-SRC: Pod内のファイルのパス
-DEST: ホスト側のファイルのパス
+`PODNAME`: Podの名前  
+`SRC`: Pod内のファイルのパス  
+`DEST`: ホスト側のファイルのパス
 
 **📖 演習内容**:
 
-```txt
+```txt:演習
 1. `CentOS` のコンテナを含むマニフェストファイルを作成
 2. `CentOS` のPodを起動
 3. `sample.txt` を、作成した `CentOS` コンテナ内の `/var/tmp` ディレクトリへ転送
@@ -1188,7 +1188,7 @@ spec:
           value: "5"
 ```
 
-```txt:tutorial/sample.txt
+```bash:tutorial/sample.txt
 Hello World !
 ```
 
@@ -1279,8 +1279,8 @@ kubectl describe [TYPE/NAME]
 ```
 
 ・引数
-TYPE: リソースの種類
-NAME: リソースの名前
+`TYPE`: リソースの種類  
+`NAME`: リソースの名前
 
 **▼ログの詳細を確認**
 基本構文:
@@ -1290,9 +1290,9 @@ kubectl logs [TYPE/NAME] [--tail=n]
 ```
 
 ・引数
-TYPE: リソースの種類
-NAME: リソースの名前
---tail=n: ログの最後からn行を表示
+`TYPE`: リソースの種類  
+`NAME`: リソースの名前  
+`--tail=n`: ログの最後からn行を表示
 
 **▼Podのログを確認**
 基本構文:
@@ -1302,11 +1302,11 @@ kubectl logs [POD]
 ```
 
 ・引数
-POD: Podの名前
+`POD`: Podの名前
 
 **📖 演習内容**:
 
-```txt
+```txt:演習
 1. `CentOS` と `nginx` のコンテナを含むマニフェストファイルを作成し起動
 2. `CentOS` と `nginx` のPodの状態を確認
 3. `CentOS` に入る
@@ -1598,7 +1598,7 @@ root@minikube:~/tutorial#
 - ネットワークとストレージを共有する
 - ノード間で移動することができる
 
-下記 pod.yml の例を見てみましょう。  
+下記 `pod.yml` の例を見てみましょう。  
 ::: details pod.yml
 
 ```yaml:pod.yml
@@ -1661,7 +1661,7 @@ spec:
 
 #### 演習
 
-```txt
+```txt:演習
 1. ホストにフォルダとファイルを作成
 2. 作成したフォルダをマウントしたPodマニフェストファイルを作成
 3. リソース作成
@@ -1754,7 +1754,7 @@ HEllo World!
 - Podのステータスを監視する
 - Podのステータスが変化した場合に、指定した数のPodを自動で起動する
 
-下記 replicaset.yml の例を見てみましょう。  
+下記 `replicaset.yml` の例を見てみましょう。  
 :::details replicaset.yml
 
 ```yaml:replicaset.yml
@@ -1808,7 +1808,7 @@ spec:
 
 #### 演習
 
-```txt
+```txt:演習
 1. ReplicaSetマニフェストファイルを作成
 2. リソース作成
 3. 手動でスケールアウト(構築するサーバーの台数を増やす)
@@ -1922,7 +1922,7 @@ root@minikube:~/tutorial#
 
 出力結果より、Podが5つになっていることが確認できます。  
 このように、ReplicaSetを使うことで、Podの数を簡単に増減させることができます。  
-最後に、リソースを削除して終了します。
+演習としては完了なので、コンテナから抜けてPodを削除します。
 
 ---
 
@@ -1937,7 +1937,7 @@ root@minikube:~/tutorial#
 - Podのステータスを監視する
 - Podのステータスが変化した場合に、指定した数のPodを自動で起動する
 
-下記 deployment.yml の例を見てみましょう。
+下記 `deployment.yml` の例を見てみましょう。
 :::details deployment.yml
 
 ```yaml:deployment.yml
@@ -2024,7 +2024,7 @@ NAME:リソース名
 
 #### 演習
 
-```txt
+```txt:演習
 1. Deploymentマニフェストファイルを作成
 2. リソースを作成
 3. ロールアウト履歴確認
@@ -2199,7 +2199,7 @@ root@minikube:~/tutorial#
 
 REVISION 3 が追加され、ロールバックされました。  
 このように、ロールバックは `kubectl rollout undo` コマンドで実行できます。  
-最後に、リソースを削除して終了します。
+演習としては完了なので、コンテナから抜けてPodを削除します。
 
 ---
 
@@ -2218,7 +2218,7 @@ REVISION 3 が追加され、ロールバックされました。
 - **ExternalName**
   外部サービスに接続
 
-下記 service.yml の例を見てみましょう。
+下記 `service.yml` の例を見てみましょう。
 
 ::: details service.yml
 
@@ -2275,7 +2275,7 @@ spec:
 
 #### 演習
 
-```txt
+```txt:演習
 1.NodePortのServiceマニフェストファイルを作成
 2.リソース作成
 3.ブラウザへアクセスして動作確認
@@ -2570,9 +2570,160 @@ minikube service web-svc
 
 無事にアクセスできました！🎉
 
-確認自体が完了しましたので、リソースを削除して完了します。
+演習としては完了なので、コンテナから抜けてPodを削除します。
 
 ### ConfigMap
+
+Kubernetesでは、設定情報を管理するためのリソースとしてConfigMapがあります。  
+ConfigMapを使用することで、以下のようなメリットがあります。
+
+- 設定情報をコンテナイメージから切り離し、より柔軟な管理が可能になる
+- 設定情報をコンテナイメージから切り離すことで、アプリケーションの再ビルドや再デプロイを必要とせずに設定情報を変更できる
+
+下記 `configmap.yml` の例を見てみましょう。
+
+::: details configmap.yml
+
+```yaml:configmap.yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sample-config
+  namespace: default
+data:
+  sample.cfg: |
+    user: taro.tanaka
+  type: "application"
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample
+  namespace: default
+spec:
+  containers:
+  - name: sample
+    image: nginx:1.17.2-alpine
+    env:
+    - name: TYPE
+      valueFrom:
+        configMapKeyRef:
+          name: sample-config
+          key: type
+    volumeMounts:
+    - name: config-storage
+      mountPath: /home/nginx
+  volumes:
+  - name: config-storage
+    configMap:
+      name: sample-config
+      items:
+      - key: sample.cfg
+        path: sample.cfg
+```
+
+:::
+
+一例として、マニフェストファイルの書き方については、これまでは spec に着目していましたが ConfigMap では **data にキーバリューで保存**します。  
+**※下記はあくまで一例であり、調べてみた結果他にも種類がありました。**  
+**その他の種類については公式ドキュメントを参照してください。**  
+[Kubernetes公式ドキュメント:ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
+
+**data**:
+
+- `data`: 設定情報を保存するためのキーバリュー形式のデータ
+- `data.sample.cfg`: ファイル形式の設定データ（複数行のテキスト）
+- `data.type`: キー・バリュー形式の設定データ（単一の値）
+
+**containers**:
+
+- `spec.containers.env.valueForm`: 値の取得元を指定
+- `spec.containers.env.valueFrom.configMapKeyRef.name`: ConfigMapから値を参照
+- `spec.containers.env.valueFrom.configMapKeyRef.key`: ConfigMapのキーを指定
+
+リソースの利用方法は、2種類あります。
+
+| 利用方法               | ポイント                                            |
+| ---------------------- | --------------------------------------------------- |
+| ワークロ環境変数へ渡す | spec.containers.env.valueForm に ConfigMap を指定   |
+| ファイルとしてマウント | spec.volumes と spec.containers.volumeMounts に指定 |
+
+#### 演習
+
+```txt:演習
+1.ConfigMap と Pod を含むマニフェストファイルを作成
+2.リソースを作成
+3.Pod に入って ConfigMap が接続されていることを確認
+```
+
+1. ConfigMap と Pod を含むマニフェストファイルを作成します。
+   ::: details tutorial/configmap.yml
+
+```yaml:tutorial/configmap.yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sample-config
+  namespace: default
+data:
+  sample.cfg: |
+    user: taro.tanaka
+  type: "application"
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample
+  namespace: default
+spec:
+  containers:
+  - name: sample
+    image: nginx:1.17.2-alpine
+    env:
+    - name: TYPE
+      valueFrom:
+        configMapKeyRef:
+          name: sample-config
+          key: type
+    volumeMounts:
+    - name: config-storage
+      mountPath: /home/nginx
+  volumes:
+  - name: config-storage
+    configMap:
+      name: sample-config
+      items:
+      - key: sample.cfg
+        path: sample.cfg
+```
+
+:::
+
+2.リソースを作成します。
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl apply -f configmap.yml
+configmap/sample-config created
+pod/sample created
+root@minikube:~/tutorial#
+```
+
+3.マウント先の `/home/nginx` に `sample.cfg` が存在することを確認します。
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl exec -it sample -- shs
+/ # ls /home/nginx/
+sample.cfg
+/ # cat /home/nginx/sample.cfg
+user: taro.tanaka
+/ #
+```
+
+`sample.cfg` の存在を確認でき、かつファイルの内容も確認できました。  
+このように、ConfigMap を使用することで、設定情報をコンテナイメージから切り離し、より柔軟な管理が可能になります。  
+演習としては完了なので、コンテナから抜けてPodを削除します。
 
 ---
 
@@ -2589,8 +2740,6 @@ minikube service web-svc
 ---
 
 ### Ingress
-
-<!-- ## ※ここから続き -->
 
 ## 🎉 まとめ
 
