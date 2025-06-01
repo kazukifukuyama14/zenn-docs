@@ -1992,21 +1992,216 @@ spec:
 
 **revisionHistoryLimit**:
 
-- `spec.revisionHistoryLimit`：Deploymentの履歴を保持する数を指定
+- `spec.revisionHistoryLimit`：Deploymentの履歴を保持する数を指定(デフォルトは**10**)
 
 **strategy**:
+※**Kubernetes v1.15 以降では RollingUpdate がデフォルト**になりました。
 
-- `spec.strategy.rollingUpdate.maxSurge`：スケールアウト時に作成するPodの数を指定
-- `spec.strategy.rollingUpdate.maxUnavailable`：スケールイン時に削除するPodの数を指定
+- `spec.strategy`：スケーリングの方法を指定
 - `spec.strategy.type`：スケーリングのタイプを指定
+- `spec.strategy.rollingUpdate`：スケーリングの方法を指定
+- `spec.strategy.rollingUpdate.maxSurge`：スケールアウト時に作成するPodの数を指定
+  (**レプリカ数を超えてよいPod数**)
 - `spec.strategy.rollingUpdate.maxUnavailable`：スケールイン時に削除するPodの数を指定
-- `spec.strategy.rollingUpdate.maxSurge`：スケールアウト時に作成するPodの数を指定s
+  (**一度に消失してよいPod数**)
+
+ロールアウト履歴を表示するコマンドは以下の通りです。
+
+```bash
+kubectl rollout history [TYPE/NAME] --to-revision=N
+```
+
+・引数
+TPPE:リソースの種類
+NAME:リソース名
+--to-revision:ロールアウト履歴の番号(デフォルトは0)
 
 **template**:
 
 - `spec.template.metadata.labels`：Podのラベルを指定
 - `spec.template.spec.containers.name`：コンテナ名を指定
 - `spec.template.spec.containers.image`：コンテナイメージを指定
+
+#### 演習
+
+```txt
+1. Deploymentマニフェストファイルを作成
+2. リソースを作成
+3. ロールアウト履歴確認
+4. Deployment修正
+5. ロールアウト履歴確認
+6. ロールバック
+```
+
+1. Deploymentマニフェストファイルを作成します。
+
+::: details tutorial/deployment.yml
+
+```yaml:tutorial/deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+      env: study
+  revisionHistoryLimit: 14
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: web
+        env: study
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17.2-alpine
+```
+
+:::
+
+2.リソースを作成します。
+
+```bash
+root@minikube:~/tutorial# kubectl apply -f deployment.yml
+deployment.apps/nginx created
+root@minikube:~/tutorial# kubectl get all
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/nginx-7f5db5465d-s9tf9   1/1     Running   0          17s
+pod/nginx-7f5db5465d-xhfzl   1/1     Running   0          17s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6d17h
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   2/2     2            2           17s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx-7f5db5465d   2         2         2       17s
+root@minikube:~/tutorial#
+```
+
+5.ロールアウト履歴を確認します。
+
+```bash
+root@minikube:~/tutorial# kubectl rollout history deployment/nginx
+deployment.apps/nginx
+REVISION  CHANGE-CAUSE
+1         <none>
+
+root@minikube:~/tutorial#
+```
+
+実行結果から、ロールアウト履歴は1つしかありません。  
+出力結果の `CHANGE-CAUSE` の部分は、デフォルトでは空になっています。
+
+4.Deployment修正します。
+こちらを更新するには、マニフェストファイルの `annotations` に `kubernetes.io/change-cause` を追加してメッセージを記載します。
+:::details tutorial/deployment.yml
+
+```yaml:tutorial/deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  annotations: # 追加
+    kubernetes.io/change-cause: "Update nginx" # 追加
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+      env: study
+  revisionHistoryLimit: 14
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: web
+        env: study
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17.3-alpine # バージョンを変更
+
+```
+
+:::
+再度リソースを作成して、ロールアウト履歴を確認します。
+
+```bash
+root@minikube:~/tutorial# kubectl apply -f deployment.yml
+deployment.apps/nginx configured
+root@minikube:~/tutorial# kubectl rollout history deploy/nginx
+deployment.apps/nginx
+REVISION  CHANGE-CAUSE
+1         <none>
+2         Update nginx
+
+root@minikube:~/tutorial#
+```
+
+annotations に記載したメッセージが、ロールアウト履歴に表示されました。  
+しかし、nginxのバージョンがUpした履歴が出力されていません。  
+それに対しては、リビジョンを指定することで確認できます。
+
+```bash
+root@minikube:~/tutorial# kubectl rollout history deploy/nginx --revision=2
+deployment.apps/nginx with revision #2
+Pod Template:
+  Labels:       app=web
+        env=study
+        pod-template-hash=9fc9b8565
+  Annotations:  kubernetes.io/change-cause: Update nginx
+  Containers:
+   nginx:
+    Image:      nginx:1.17.3-alpine
+    Port:       <none>
+    Host Port:  <none>
+    Environment:        <none>
+    Mounts:     <none>
+  Volumes:      <none>
+  Node-Selectors:       <none>
+  Tolerations:  <none>
+
+root@minikube:~/tutorial#
+```
+
+`kubectl rollout history` コマンドの基本出力では、**CHANGE-CAUSE のみが表示**されます。  
+具体的なイメージバージョンなどの詳細情報を確認するには、**--revision オプションで特定のリビジョンを指定する**必要があります。
+
+6.直前のバージョンに戻すには、以下のコマンドを実行します。
+
+```bash
+root@minikube:~/tutorial# kubectl rollout undo deployment/nginx
+deployment.apps/nginx rolled back
+root@minikube:~/tutorial# kubectl rollout history deploy/nginx
+deployment.apps/nginx
+REVISION  CHANGE-CAUSE
+2         Update nginx
+3         <none>
+
+root@minikube:~/tutorial#
+```
+
+REVISION 3 が追加され、ロールバックされました。  
+このように、ロールバックは `kubectl rollout undo` コマンドで実行できます。  
+最後に、リソースを削除して終了します。
+
+---
 
 ### Service
 
