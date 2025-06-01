@@ -2014,7 +2014,7 @@ kubectl rollout history [TYPE/NAME] --to-revision=N
 ・引数
 `TYPE`:リソースの種類  
 `NAME`:リソース名  
---to-revision:ロールアウト履歴の番号(デフォルトは0)  
+--to-revision:ロールアウト履歴の番号(デフォルトは0)
 
 **template**:
 
@@ -2659,7 +2659,8 @@ spec:
 ```
 
 1. ConfigMap と Pod を含むマニフェストファイルを作成します:
-   ::: details tutorial/configmap.yml
+
+::: details tutorial/configmap.yml
 
 ```yaml:tutorial/configmap.yml
 apiVersion: v1
@@ -2729,6 +2730,269 @@ user: taro.tanaka
 ---
 
 ### Secret
+
+Kubernetes上で機密情報を管理するためのリソースとしてSecretがあります。
+Secretを使用することで、以下のようなメリットがあります。
+
+- 機密情報をコンテナイメージから切り離し、より柔軟な管理が可能になる
+- 機密情報をコンテナイメージから切り離すことで、アプリケーションの再ビルドや再デプロイを必要とせずに機密情報を変更できる
+- コンテナイメージに機密情報を含めることを避けることができる
+- Kubernetesのコンポーネント間で機密情報を共有することができる
+- 機密情報を暗号化して保存することで、セキュリティを向上させることができる
+
+下記 `secret.yml` の例を見てみましょう:
+::: details secret.yml
+
+```yaml:secret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sample-secret
+data:
+  message: SGVsbG8gV29ybGQgIQ==     # echo -n 'Hello World !' | base64
+  keyfile: WU9VUi1TRUNSRVQtS0VZ     # cat ./keyfile | base64
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample
+  namespace: default
+spec:
+  containers:
+  - name: sample
+    image: nginx:1.17.2-alpine
+    env:
+    - name: MESSAGE
+      valueFrom:
+        secretKeyRef:
+          name: sample-secret
+          key: message
+    volumeMounts:
+    - name: secret-storage
+      mountPath: /home/nginx
+  volumes:
+  - name: secret-storage
+    secret:
+      secretName: sample-secret
+      items:
+      - key: keyfile
+        path: keyfile
+```
+
+:::
+
+一例として、マニフェストファイルの書き方についてはSecretでは **data にキーバリューで保存**します。  
+**※下記はあくまで一例であり、調べてみた結果他にも種類がありました。**  
+**その他の種類については公式ドキュメントを参照してください。**  
+[Kubernetes公式ドキュメント:Secret](https://kubernetes.io/docs/concepts/configuration/secret/)
+
+**data**:
+
+- `data`: 機密情報を保存するためのキーバリュー形式のデータ
+- `data.message`: メッセージを保存するためのキーバリュー形式のデータ
+- `data.keyfile`: キーファイルを保存するためのキーバリュー形式のデータ
+  **※base64エンコードされています。**  
+  base64エンコードについては、[base64エンコード・デコード](https://qiita.com/kazukimatsumoto/items/13170a85242449140121)を参照してください。
+
+**containers**:
+
+- `spec.containers.env.valueForm`: 値の取得元を指定
+- `spec.containers.env.valueFrom.secretKeyRef.name`: Secretから値を参照
+- `spec.containers.env.valueFrom.secretKeyRef.key`: Secretのキーを指定
+- `spec.containers.volumeMounts`: マウント先のパスを指定
+- `spec.volumes`: マウント先のパスを指定
+- `spec.volumes.secret.secretName`: Secretの名前を指定
+- `spec.volumes.secret.items`: マウント先のパスを指定
+- `spec.volumes.secret.items.key`: マウント先のパスを指定
+- `spec.volumes.secret.items.path`: マウント先のパスを指定
+
+リソース生成方法は、2種類あります。
+
+| 利用方法                     | ポイント                                                                    |
+| ---------------------------- | --------------------------------------------------------------------------- |
+| コマンドで直接生成           | キーバリューは複数で指定                                                    |
+| マニフェストファイルから生成 | マニフェストファイルから生成は `kubectl apply` / Base64文字列の値取得が必要 |
+
+**コマンドで直接生成**:
+
+```bash:minikube
+kubectl create secret generic NAME OPTION
+```
+
+・引数  
+`NAME`: リソース名  
+`OPTION`: オプション
+
+・オプション  
+`--from-literal`: キーバリュー形式のデータを指定  
+`--from-file`: ファイルからキーバリュー形式のデータを指定  
+`--from-env-file`: 環境変数ファイルからキーバリュー形式のデータを指定
+
+**コマンドでBase64文字列の値を取得**:
+
+```bash:minikube
+echo -n 'TEXT' | base64
+```
+
+・引数
+`TEXT`: Base64変換したい文字列
+
+リソース利用方法は、2種類あります。
+
+| 利用方法               | ポイント                                                      |
+| ---------------------- | ------------------------------------------------------------- |
+| 環境変数へ渡す         | spec.containers.env.valueFrom に Secret を指定                |
+| ファイルとしてマウント | spec.volumes と spec.containers.volumeMounts に Secret に指定 |
+
+#### 演習
+
+```txt:演習
+1.Secret と Pod を含むマニフェストファイルを作成
+2.リソースを作成
+3.Pod に入って Secret が接続されていることを確認
+```
+
+1.まず初めに、コマンドから Secret を作成します。  
+「リテラル」と「ファイル」の2種類で `tutorial` 配下にSecret を作成します:
+
+```bash:keyfile
+OUR-SECRET-KEY
+```
+
+```bash:minikube
+root@minikube:~/tutorial# ls
+keyfile  secret.yml
+root@minikube:~/tutorial#
+```
+
+コマンドを実行します:
+
+```bash:minikube
+kubectl create secret generic sample-secret \
+--from-literal=message='Hello World!' \
+--from-file=keyfile=./keyfile
+```
+
+作成されているか確認します:
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl get secret
+NAME            TYPE     DATA   AGE
+sample-secret   Opaque   2      44s
+root@minikube:~/tutorial#
+```
+
+中身の確認をYAML形式で確認します:
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl get secret/sample-secret -o yaml
+apiVersion: v1
+data:
+  keyfile: T1VSLVNFQ1JFVC1LRVk=
+  message: SGVsbG8gV29ybGQh
+kind: Secret
+metadata:
+  creationTimestamp: "2025-06-01T09:18:44Z"
+  name: sample-secret
+  namespace: default
+  resourceVersion: "50834"
+  uid: 68d757b5-1623-4e58-ae03-81af0a8ec077
+type: Opaque
+root@minikube:~/tutorial#
+```
+
+`keyfile` と `message` が存在していることが確認できます。  
+手動での生成を実施することができましたので、一旦作成したものを削除します:
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl delete secret/sample-secret
+secret "sample-secret" deleted
+root@minikube:~/tutorial# kubectl get secret
+No resources found in default namespace.
+root@minikube:~/tutorial#
+```
+
+2.Secret と Pod を含むマニフェストファイルを作成しますが、Base64の文字列を取得しないといけないため、コマンドを実行します:
+
+```bash:minikube
+root@minikube:~/tutorial# echo -n 'Hello World !' | base64
+SGVsbG8gV29ybGQgIQ==
+root@minikube:~/tutorial#
+```
+
+```bash:minikube
+root@minikube:~/tutorial# echo -n 'OUR-SECRET-KEY' | base64
+T1VSLVNFQ1JFVC1LRVk=
+root@minikube:~/tutorial#
+```
+
+それぞれ取得できましたので、これらを基にマニフェストファイルを作成します:
+
+::: details secret.yml
+
+```yaml:secret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sample-secret
+data:
+  message: SGVsbG8gV29ybGQgIQ==     # echo -n 'Hello World !' | base64
+  keyfile: T1VSLVNFQ1JFVC1LRVk=     # cat ./keyfile | base64
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample
+  namespace: default
+spec:
+  containers:
+  - name: sample
+    image: nginx:1.17.2-alpine
+    env:
+    - name: MESSAGE
+      valueFrom:
+        secretKeyRef:
+          name: sample-secret
+          key: message
+    volumeMounts:
+    - name: secret-storage
+      mountPath: /home/nginx
+  volumes:
+  - name: secret-storage
+    secret:
+      secretName: sample-secret
+      items:
+      - key: keyfile
+        path: keyfile
+```
+
+:::
+
+3.Pod に入って Secret が接続されていることを確認します:
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl apply -f secret.yml
+secret/sample-secret created
+pod/sample created
+root@minikube:~/tutorial#
+```
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl get pod
+NAME     READY   STATUS    RESTARTS   AGE
+sample   1/1     Running   0          36s
+root@minikube:~/tutorial# kubectl exec -it sample -- sh
+/ # ls /home/nginx/
+keyfile
+/ # cat /home/nginx/keyfile
+YOUR-SECRET-KEY/ #
+/ #
+```
+
+`keyfile` が接続されていることが確認できました。
+演習としては完了なので、コンテナから抜けてPodを削除します。
 
 ---
 
