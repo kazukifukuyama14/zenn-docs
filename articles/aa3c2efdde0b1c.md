@@ -187,7 +187,7 @@ Kubernetesは、非常に効率よく大規模なITインフラを運用・管�
 
 ### minikubeの起動
 
-以下コマンドを実施し、minikubeを起動します。
+以下コマンドを実施し、minikubeを起動します:
 
 ```bash:terminal
 minikube start
@@ -335,7 +335,7 @@ pod/hello-world created
 
 #### 起動状況の確認
 
-出来上がっていることを確認するため、`kubectl get pod` コマンドを実行します。
+出来上がっていることを確認するため、`kubectl get pod` コマンドを実行します:
 
 ```bash:minikube
 kubectl get pod
@@ -350,7 +350,7 @@ hello-world   0/1     Completed   0          10m
 
 #### ログの確認
 
-ログを確認するため、 `kubectl logs pod/hello-world` コマンドを実行します。
+ログを確認するため、 `kubectl logs pod/hello-world` コマンドを実行します:
 
 ```bash:minikube
 kubectl logs pod/hello-world
@@ -383,7 +383,7 @@ For more examples and ideas, visit:
 
 #### リソースのクリーンアップ
 
-作成したコンテナの削除を実施します。
+作成したコンテナの削除を実施します:
 
 ```bash:minikube
 kubectl delete pod/hello-world
@@ -632,7 +632,7 @@ Kubernetes反映：kubectlコマンドを利用して反映
 
 #### マニフェストファイルの作成
 
-YAMLファイルにリソースの定義を記載します。
+YAMLファイルにリソースの定義を記載します:
 
 **例：**
 
@@ -652,34 +652,38 @@ spec:
 ```
 
 **リソースの作成・変更**:
-マニフェストファイルを指定してリソースを作成、変更します。
+マニフェストファイルを指定してリソースを作成、変更します:
 
 ```bash:minikube
 kubectl apply -f <filename>
 ```
 
-**オプション：**  
+**オプション**  
 `-f <filename>` ： マニフェストファイルパス
 
-**リソース確認コマンド:**
-指定したリソースの状態を確認します。
+---
+
+**リソース確認コマンド**
+指定したリソースの状態を確認します:
 
 ```bash:minikube
 kubectl get [-f <filename>] [TYPE]
 ```
 
-**オプション：**  
+**オプション**  
 `-f <filename>` ： マニフェストファイルパス  
 `TYPE` ： リソース種別（pod, replicaset など）
 
+---
+
 **リソース削除コマンド**
-指定したリソースを削除します。
+指定したリソースを削除します:
 
 ```bash:minikube
 kubectl delete [-f <filename>] [TYPE/NAME] [-o [wide|yaml]]
 ```
 
-**オプション：**  
+**オプション**  
 `-f <filename>` ： マニフェストファイルパス  
 `TYPE/NAME -o [wide|yaml]` ： 出力形式を指定します。  
 ※wide：追加情報の表示, yaml：YAML形式で表示
@@ -721,7 +725,7 @@ root@minikube:~#
 
 **作業用ディレクトリを作成**:
 
-名前は何でもよいですが、とりあえず `tutorial` ディレクトリとしておきます。
+名前は何でもよいですが、とりあえず `tutorial` ディレクトリとしておきます:
 
 ```bash:minikube
 root@minikube:~# mkdir ./tutorial
@@ -729,7 +733,7 @@ root@minikube:~# mkdir ./tutorial
 
 **ディレクトリの作成確認**:
 
-`root` 直下に `tutorial` ディレクトリが作成されていることを確認します。
+`root` 直下に `tutorial` ディレクトリが作成されていることを確認します:
 
 ```bash:minikube
 root@minikube:~# ls -l
@@ -740,7 +744,7 @@ root@minikube:~#
 
 **マニフェストファイルの作成**:
 
-`tutorial` 直下に `pod.yml` を作成します。
+`tutorial` 直下に `pod.yml` を作成します:
 
 :::details pod.yml
 
@@ -828,9 +832,7 @@ root@minikube:~/tutorial#
 - 種別、メタデータ、コンテナの3構成で定義されている。
   ※リソースによって定義の中身に変動あり
 
-前段で説明しました `pod.yml` について、改めて詳細の説明を記載したいと思います。
-
-(例)：
+前段で説明しました `pod.yml` について、改めて詳細の説明を記載したいと思います:
 
 ::: details tutorial/pod.yml
 
@@ -874,7 +876,7 @@ spec:
 
 ---
 
-例題には記載しておりませんが、コンテナの設定には以下のようなものがあります。
+例題には記載しておりませんが、コンテナの設定には以下のようなものがあります:
 
 ::: details pod.yml
 
@@ -970,7 +972,7 @@ exit
 ```
 
 1.まずは任意のテキストエディタからSSHで接続し、マニフェストファイルを作成します。  
-※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pods.yml` を作成します。
+※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pods.yml` を作成します:
 
 ::: details tutorial/pods.yml
 
@@ -1055,7 +1057,7 @@ root@minikube:~/tutorial#
 ```
 
 4.次に、本題のコンテナへの入り方を記載します。  
-`debug` コンテナに入ります。
+`debug` コンテナに入ります:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it debug sh
@@ -1069,7 +1071,7 @@ root@minikube:~/tutorial#
 `kubectl exec` コマンドが使えないようです。  
 これは、Kubernetes v1.24から 新しいバージョンのkubectlでは、コマンドの前に `--` を付ける必要があるのだそうです。  
 `kubectl exec -it POD sh` コマンドの代わりに、 `kubectl exec -it POD -- ssh` を使用します。  
-これで、コンテナ内に入ることがでるはずです。
+これで、コンテナ内に入ることがでるはずです:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it debug -- sh
@@ -1077,7 +1079,7 @@ sh-4.2#
 ```
 
 入れました！  
-`exit` コマンドでコンテナから出て、残りの `nginx` コンテナへのアクセスを確認します。
+`exit` コマンドでコンテナから出て、残りの `nginx` コンテナへのアクセスを確認します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it nginx -- sh
@@ -1106,7 +1108,7 @@ kubectl exec -it POD -- sh
 
 5.コンテナから `exit` コマンドでコンテナから出ます。
 
-6.最後に、作成したPodを削除します。
+6.最後に、作成したPodを削除します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl delete -f pods.yml
@@ -1158,7 +1160,7 @@ kubectl cp PODNAME:SRC DEST
 ```
 
 1.まずは任意のテキストエディタからSSHで接続し、マニフェストファイルを作成します。  
-※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pod.yml` と `sample.txt` を作成します。
+※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pod.yml` と `sample.txt` を作成します:
 
 ::: details tutorial/pod.yml, tutorial/sample.txt
 
@@ -1220,14 +1222,14 @@ root@minikube:~/tutorial#
 ```
 
 3.ホスト内に作成した `sample.txt` を、作成した `CentOS` コンテナ内の `/var/tmp` ディレクトリへ転送します。  
-わかりやすくするため、転送先のテキストファイル名を変更しています。
+わかりやすくするため、転送先のテキストファイル名を変更しています:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl cp ./sample.txt debug:/var/tmp/sample_transfer.txt
 root@minikube:~/tutorial#
 ```
 
-コンテナ内に入り、ファイルが転送されたことを確認します。
+コンテナ内に入り、ファイルが転送されたことを確認します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it debug -- sh
@@ -1238,7 +1240,7 @@ sh-4.2#
 
 4.ログイン中のコンテナ内でファイルを作成して、ホスト側にコピーします。  
 手順としては、空ファイルを作成して `vi` コマンドで `Received Successfully!` と記載します。  
-その後にコンテナから抜けて、ホスト側にコピーします。
+その後にコンテナから抜けて、ホスト側にコピーします:
 
 ```bash:minikube
 sh-4.2# ~
@@ -1257,7 +1259,7 @@ Received Successfully!
 root@minikube:~/tutorial#
 ```
 
-5.最後に、作成したPodを削除します。
+5.最後に、作成したPodを削除します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl delete -f pod.yml
@@ -1317,7 +1319,7 @@ kubectl logs [POD]
 ```
 
 1.`CentOS` と `nginx` のコンテナを含むマニフェストファイルを作成し起動します。  
-※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pods.yml` を作成します。
+※前段の演習で使用した `tutorial` ディレクトリを使いまわし、その配下に `pods.yml` を作成します:
 
 ::: details tutorial/pods.yml
 
@@ -1357,7 +1359,7 @@ spec:
 
 :::
 
-起動します。
+起動します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f pods.yml
@@ -1367,7 +1369,7 @@ root@minikube:~/tutorial#
 ```
 
 2.作成したPodの状態を確認します。  
-手始めに、 `debug` のPodの状態を確認します。
+手始めに、 `debug` のPodの状態を確認します:
 
 ::: details kubectl describe pod/debug
 
@@ -1441,7 +1443,7 @@ root@minikube:~/
 :::
 
 `Events` の部分に注目すると、Podの作成・起動・終了などのイベントが記載されていることがわかると思います。  
-次に、 `nginx` のPodの状態を確認します。
+次に、 `nginx` のPodの状態を確認します:
 
 ::: details kubectl describe pod/nginx
 
@@ -1506,7 +1508,7 @@ root@minikube:~/tutorial#
 `debug` のPodと同様に、`nginx` のPodの状態も確認できました。
 
 3.`CentOS` のPodに接続して `nginx` へアクセスしてアクセスログを見てみます。  
-その前に、作成したコンテナのIPアドレスを確認します。
+その前に、作成したコンテナのIPアドレスを確認します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl get pod -o wide
@@ -1516,14 +1518,14 @@ nginx   1/1     Running   0          8m57s   10.244.0.25   minikube   <none>    
 root@minikube:~/tutorial#
 ```
 
-本題の`CentOS` のPodに接続して `nginx` へアクセスしてアクセスログを見てみます。
+本題の`CentOS` のPodに接続して `nginx` へアクセスしてアクセスログを見てみます:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it debug -- sh
 sh-4.2#
 ```
 
-`nginx` へアクセスしてアクセスログを見てみます。
+`nginx` へアクセスしてアクセスログを見てみます:
 
 ::: details curl実行結果
 
@@ -1561,7 +1563,7 @@ sh-4.2#
 
 アクセス成功です！
 
-5.6. コンテナから出て、`nginx` のPodの状態を確認します。
+5.6. コンテナから出て、`nginx` のPodの状態を確認します:
 
 ```bash:minikube
 sh-4.2# exit
@@ -1573,7 +1575,7 @@ root@minikube:~/tutorial#
 
 `nginx` のPodのアクセスログが確認できました。
 
-7.Podを削除します。
+7.Podを削除します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl delete -f pods.yml
@@ -1598,7 +1600,7 @@ root@minikube:~/tutorial#
 - ネットワークとストレージを共有する
 - ノード間で移動することができる
 
-下記 `pod.yml` の例を見てみましょう。  
+下記 `pod.yml` の例を見てみましょう:
 ::: details pod.yml
 
 ```yaml:pod.yml
@@ -1667,7 +1669,7 @@ spec:
 3. リソース作成
 ```
 
-1.まずはKubernetesのホストにフォルダとファイルを作成します。
+1.まずはKubernetesのホストにフォルダとファイルを作成します:
 
 ```bash:minikube
 root@minikube:~# mkdir /data/strage
@@ -1677,8 +1679,7 @@ root@minikube:~#
 ```
 
 2.作成した `/data/strage` をマウントするようなPodマニフェストファイルを作成します。  
-作成対象のファイルを格納するディレクトリは、いつも通り `tutorial` ディレクトリにします。
-
+作成対象のファイルを格納するディレクトリは、いつも通り `tutorial` ディレクトリにします:
 ::: details tutorial/pod.yml
 
 ```yaml:tutorial/pod.yml
@@ -1703,7 +1704,7 @@ spec:
 :::
 
 リソース作成前に、1.で作成したディレクトリ直下にファイルを作成して、 `/home/nginx` から作成したファイルを参照できるか確認してみます。  
-対象のディレクトリ `/data/storage` に移動し、 配下に `message` ファイルを作成し、内容は `Hello World!` とします。
+対象のディレクトリ `/data/storage` に移動し、 配下に `message` ファイルを作成し、内容は `Hello World!` とします:
 
 ```bash:minikube
 root@minikube:~# cd /data/storage/
@@ -1714,7 +1715,7 @@ root@minikube:/data/storage#
 ```
 
 3.リソースを作成し、作成したPodに接続してファイルの内容を確認します。  
-まずは `tutorial` ディレクトリに移動し、リソースを作成してコンテナ内に接続します。
+まずは `tutorial` ディレクトリに移動し、リソースを作成してコンテナ内に接続します:
 
 ```bash:minikube
 root@minikube:~# cd tutorial/
@@ -1727,7 +1728,7 @@ root@minikube:~/tutorial# kubectl exec -it sample -- sh
 / #
 ```
 
-`/home/nginx` にマウントしたディレクトリに移動し、ファイルの内容を確認します。
+`/home/nginx` にマウントしたディレクトリに移動し、ファイルの内容を確認します:
 
 ```bash:minikube
 / # cd /home/nginx/
@@ -1754,7 +1755,7 @@ HEllo World!
 - Podのステータスを監視する
 - Podのステータスが変化した場合に、指定した数のPodを自動で起動する
 
-下記 `replicaset.yml` の例を見てみましょう。  
+下記 `replicaset.yml` の例を見てみましょう:
 :::details replicaset.yml
 
 ```yaml:replicaset.yml
@@ -1814,7 +1815,7 @@ spec:
 3. 手動でスケールアウト(構築するサーバーの台数を増やす)
 ```
 
-1.まずは `tutorial` ディレクトリに移動し、ReplicaSetマニフェストファイルを作成します。
+1.まずは `tutorial` ディレクトリに移動し、ReplicaSetマニフェストファイルを作成します:
 ::: details tutorial/replicaset.yml
 
 ```yaml:tutorial/replicaset.yml
@@ -1842,7 +1843,7 @@ spec:
 
 :::
 
-2.リソースを作成します。
+2.リソースを作成します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f replicaset.yml
@@ -1851,7 +1852,7 @@ root@minikube:~/tutorial#
 ```
 
 出力結果から、3つのPodが作成されていることが確認できます。  
-また、 `kubectl get all` コマンドですべてのリソースの状態を確認することができます。
+また、 `kubectl get all` コマンドですべてのリソースの状態を確認することができます:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl get all
@@ -1870,8 +1871,7 @@ root@minikube:~/tutorial#
 
 3.手動でスケールアウトします。  
 方法としては、マニフェストファイルを編集し、 `replicas` の値を変更します。
-ここでは、 `replicas` の値を `5` に変更します。
-
+ここでは、 `replicas` の値を `5` に変更します:
 ::: details tutorial/replicaset.yml
 
 ```yaml:tutorial/replicaset.yml
@@ -1899,7 +1899,7 @@ spec:
 
 :::
 
-変更したマニフェストファイルを適用し、リソースを再度作成します。
+変更したマニフェストファイルを適用し、リソースを再度作成します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f replicaset.yml
@@ -1937,7 +1937,7 @@ root@minikube:~/tutorial#
 - Podのステータスを監視する
 - Podのステータスが変化した場合に、指定した数のPodを自動で起動する
 
-下記 `deployment.yml` の例を見てみましょう。
+下記 `deployment.yml` の例を見てみましょう:
 :::details deployment.yml
 
 ```yaml:deployment.yml
@@ -2005,16 +2005,16 @@ spec:
 - `spec.strategy.rollingUpdate.maxUnavailable`：スケールイン時に削除するPodの数を指定
   (**一度に消失してよいPod数**)
 
-ロールアウト履歴を表示するコマンドは以下の通りです。
+ロールアウト履歴を表示するコマンドは以下の通りです:
 
 ```bash:minikube
 kubectl rollout history [TYPE/NAME] --to-revision=N
 ```
 
 ・引数
-TPPE:リソースの種類
-NAME:リソース名
---to-revision:ロールアウト履歴の番号(デフォルトは0)
+`TYPE`:リソースの種類  
+`NAME`:リソース名  
+--to-revision:ロールアウト履歴の番号(デフォルトは0)  
 
 **template**:
 
@@ -2033,7 +2033,7 @@ NAME:リソース名
 6. ロールバック
 ```
 
-1. Deploymentマニフェストファイルを作成します。
+1. Deploymentマニフェストファイルを作成します:
 
 ::: details tutorial/deployment.yml
 
@@ -2068,7 +2068,7 @@ spec:
 
 :::
 
-2.リソースを作成します。
+2.リソースを作成します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f deployment.yml
@@ -2089,7 +2089,7 @@ replicaset.apps/nginx-7f5db5465d   2         2         2       17s
 root@minikube:~/tutorial#
 ```
 
-5.ロールアウト履歴を確認します。
+5.ロールアウト履歴を確認します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl rollout history deployment/nginx
@@ -2104,7 +2104,7 @@ root@minikube:~/tutorial#
 出力結果の `CHANGE-CAUSE` の部分は、デフォルトでは空になっています。
 
 4.Deployment修正します。
-こちらを更新するには、マニフェストファイルの `annotations` に `kubernetes.io/change-cause` を追加してメッセージを記載します。
+こちらを更新するには、マニフェストファイルの `annotations` に `kubernetes.io/change-cause` を追加してメッセージを記載します:
 :::details tutorial/deployment.yml
 
 ```yaml:tutorial/deployment.yml
@@ -2140,7 +2140,7 @@ spec:
 ```
 
 :::
-再度リソースを作成して、ロールアウト履歴を確認します。
+再度リソースを作成して、ロールアウト履歴を確認します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f deployment.yml
@@ -2156,7 +2156,8 @@ root@minikube:~/tutorial#
 
 annotations に記載したメッセージが、ロールアウト履歴に表示されました。  
 しかし、nginxのバージョンがUpした履歴が出力されていません。  
-それに対しては、リビジョンを指定することで確認できます。
+これは、デフォルトでは、ロールアウト履歴には、リソースの変更内容が表示されないためです。  
+それに対しては、リビジョンを指定することで確認できます:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl rollout history deploy/nginx --revision=2
@@ -2183,7 +2184,7 @@ root@minikube:~/tutorial#
 `kubectl rollout history` コマンドの基本出力では、**CHANGE-CAUSE のみが表示**されます。  
 具体的なイメージバージョンなどの詳細情報を確認するには、**--revision オプションで特定のリビジョンを指定する**必要があります。
 
-6.直前のバージョンに戻すには、以下のコマンドを実行します。
+6.直前のバージョンに戻すには、以下のコマンドを実行します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl rollout undo deployment/nginx
@@ -2218,7 +2219,7 @@ REVISION 3 が追加され、ロールバックされました。
 - **ExternalName**
   外部サービスに接続
 
-下記 `service.yml` の例を見てみましょう。
+下記 `service.yml` の例を見てみましょう:
 
 ::: details service.yml
 
@@ -2281,7 +2282,7 @@ spec:
 3.ブラウザへアクセスして動作確認
 ```
 
-1.NodePortのServiceマニフェストファイルを作成します。
+1.NodePortのServiceマニフェストファイルを作成します:
 ::: details tutorial/service.yml
 
 ```yaml:tutorial/service.yml
@@ -2317,7 +2318,7 @@ spec:
 
 :::
 
-2.リソースを作成します。
+2.リソースを作成します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f service.yml
@@ -2354,7 +2355,7 @@ minikube ip
 ![access-loop](/images/kubernetes-tutorial/access-loop.png)
 
 アクセスできないようですので、原因の確認をします。  
-確実な方法として、ポートフォワーディングでの確認を自端末から実施します。
+確実な方法として、ポートフォワーディングでの確認を自端末から実施します:
 
 ```bash:terminal
 kubectl port-forward service/web-svc 8080:80
@@ -2366,7 +2367,7 @@ kubectl port-forward service/web-svc 8080:80
 
 ひとまず表示されたようです。
 
-次に、 `minikube service web-avc` コマンドを実行して、ブラウザでアクセスします。
+次に、 `minikube service web-avc` コマンドを実行して、ブラウザでアクセスします:
 
 ```bash:terminal
 minikube service web-svc
@@ -2386,7 +2387,7 @@ minikube service web-svc
 ❗  Docker ドライバーを darwin 上で使用しているため、実行するにはターミナルを開く必要があります。
 ```
 
-これだとアクセスできるようですが、転送先のポート番号が変わっています。
+これだとアクセスできるようですが、転送先のポート番号が変わっています:
 
 ::: details 30000ポート調査
 
@@ -2498,7 +2499,7 @@ Total number of apps = 15
 - ✅ 8080番ポート（kubectl port-forward）は正常にリッスン中
 - ❌ 30000番ポートでリッスンしているプロセスが存在しない
 
-このことから、マニフェストファイルで割り当てている30000ポートを修正し、動的にポートを割り当てるように修正します。
+このことから、マニフェストファイルで割り当てている30000ポートを修正し、動的にポートを割り当てるように修正します:
 
 ::: details マニフェストファイル修正
 
@@ -2535,7 +2536,7 @@ spec:
 
 :::
 
-再度リソースを作成し、実際に割り当てられたポートを確認します。
+再度リソースを作成し、実際に割り当てられたポートを確認します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f service.yml
@@ -2547,7 +2548,7 @@ web-svc   NodePort   10.105.161.23   <none>        80:30410/TCP   9s
 root@minikube:~/tutorial#
 ```
 
-次に、自端末からアクセスコマンドを実行し、ブラウザで確認してみます。
+次に、自端末からアクセスコマンドを実行し、ブラウザで確認してみます:
 
 ```bash:terminal
 minikube service web-svc
@@ -2580,7 +2581,7 @@ ConfigMapを使用することで、以下のようなメリットがありま�
 - 設定情報をコンテナイメージから切り離し、より柔軟な管理が可能になる
 - 設定情報をコンテナイメージから切り離すことで、アプリケーションの再ビルドや再デプロイを必要とせずに設定情報を変更できる
 
-下記 `configmap.yml` の例を見てみましょう。
+下記 `configmap.yml` の例を見てみましょう:
 
 ::: details configmap.yml
 
@@ -2657,7 +2658,7 @@ spec:
 3.Pod に入って ConfigMap が接続されていることを確認
 ```
 
-1. ConfigMap と Pod を含むマニフェストファイルを作成します。
+1. ConfigMap と Pod を含むマニフェストファイルを作成します:
    ::: details tutorial/configmap.yml
 
 ```yaml:tutorial/configmap.yml
@@ -2701,7 +2702,7 @@ spec:
 
 :::
 
-2.リソースを作成します。
+2.リソースを作成します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f configmap.yml
@@ -2710,7 +2711,7 @@ pod/sample created
 root@minikube:~/tutorial#
 ```
 
-3.マウント先の `/home/nginx` に `sample.cfg` が存在することを確認します。
+3.マウント先の `/home/nginx` に `sample.cfg` が存在することを確認します:
 
 ```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it sample -- shs
