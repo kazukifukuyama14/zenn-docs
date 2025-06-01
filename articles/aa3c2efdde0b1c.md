@@ -38,11 +38,11 @@ Visual Studio Codeなど慣れているものでいいとは思いますが、�
 
 下記コマンドを入力し、インストールしていきます。
 
-```bash
+```bash:terminal
 brew install kubernetes-cli
 ```
 
-```bash
+```bash:terminal
 brew install minikube
 ```
 
@@ -189,13 +189,13 @@ Kubernetesは、非常に効率よく大規模なITインフラを運用・管�
 
 以下コマンドを実施し、minikubeを起動します。
 
-```bash
+```bash:terminal
 minikube start
 ```
 
 実行結果：
 
-```bash
+```bash:terminal
 W0525 17:12:44.569352   62706 main.go:291] Unable to resolve the current Docker CLI context "default": context "default": context not found: open /Users/wan0ri/.docker/contexts/meta/37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f/meta.json: no such file or directory
 W0525 17:12:44.569404   62706 main.go:292] Try running `docker context use default` to resolve the above error
 😄  Darwin 15.5 (arm64) 上の minikube v1.36.0
@@ -226,7 +226,7 @@ Docker Desktop ＞ Container を確認すると、 `minikube` が起動できて
 
 ターミナルにて、自端末のIPアドレス(IPv4)を事前に調べておきます。
 
-```bash
+```bash:terminal
 ifconfig
 ```
 
@@ -268,15 +268,15 @@ Host minikube
 
 コンテナ内でkubectlを使いたい場合は、以下の手順でインストールできます：
 
-```bash
+```bash:minikube
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 ```
 
-```bash
+```bash:minikube
 chmod +x kubectl
 ```
 
-```bash
+```bash:minikube
 mv kubectl /usr/local/bin/
 ```
 
@@ -284,40 +284,40 @@ mv kubectl /usr/local/bin/
 
 kubectlをインストール後、kubeconfigを設定する必要があります：
 
-```bash
+```bash:minikube
 mkdir -p ~/.kube
 ```
 
-```bash
+```bash:minikube
 cp /etc/kubernetes/admin.conf ~/.kube/config
 ```
 
-```bash
+```bash:minikube
 chown $(id -u):$(id -g) ~/.kube/config
 ```
 
 #### 動作確認
 
-```bash
+```bash:minikube
 kubectl get nodes
 ```
 
 実行結果：
 
-```bash
+```bash:minikube
 NAME       STATUS   ROLES           AGE   VERSION
 minikube   Ready    control-plane   85m   v1.33.1
 ```
 
 #### hello-worldコンテナの起動
 
-```bash
+```bash:minikube
 kubectl run hello-world --image hello-world --restart=Never
 ```
 
 実行結果：
 
-```bash
+```bash:minikube
 pod/hello-world created
 ```
 
@@ -337,13 +337,13 @@ pod/hello-world created
 
 出来上がっていることを確認するため、`kubectl get pod` コマンドを実行します。
 
-```bash
+```bash:minikube
 kubectl get pod
 ```
 
 実行結果：
 
-```bash
+```bash:minikube
 NAME          READY   STATUS      RESTARTS   AGE
 hello-world   0/1     Completed   0          10m
 ```
@@ -352,13 +352,13 @@ hello-world   0/1     Completed   0          10m
 
 ログを確認するため、 `kubectl logs pod/hello-world` コマンドを実行します。
 
-```bash
+```bash:minikube
 kubectl logs pod/hello-world
 ```
 
 実行結果：
 
-```bash
+```bash:minikube
 Hello from Docker!
 This message shows that your installation appears to be working correctly.
 
@@ -385,13 +385,13 @@ For more examples and ideas, visit:
 
 作成したコンテナの削除を実施します。
 
-```bash
+```bash:minikube
 kubectl delete pod/hello-world
 ```
 
 実行結果：
 
-```bash
+```bash:minikube
 pod "hello-world" deleted
 ```
 
@@ -444,7 +444,7 @@ Kubernetesの主なリソースは以下の通りとなります。
 
 **負荷分散の例**:
 
-```bash
+```txt
 クライアント → L4ロードバランサー → サーバー群
    (IP:Port で振り分け)
 ```
@@ -466,7 +466,7 @@ Kubernetesの主なリソースは以下の通りとなります。
 
 **負荷分散の例**:
 
-```bash
+```txt
 クライアント → L7ロードバランサー → サーバー群
             (URL、ヘッダー等で振り分け)
 ```
@@ -654,7 +654,7 @@ spec:
 **リソースの作成・変更**:
 マニフェストファイルを指定してリソースを作成、変更します。
 
-```bash
+```bash:minikube
 kubectl apply -f <filename>
 ```
 
@@ -664,7 +664,7 @@ kubectl apply -f <filename>
 **リソース確認コマンド:**
 指定したリソースの状態を確認します。
 
-```bash
+```bash:minikube
 kubectl get [-f <filename>] [TYPE]
 ```
 
@@ -675,7 +675,7 @@ kubectl get [-f <filename>] [TYPE]
 **リソース削除コマンド**
 指定したリソースを削除します。
 
-```bash
+```bash:minikube
 kubectl delete [-f <filename>] [TYPE/NAME] [-o [wide|yaml]]
 ```
 
@@ -713,7 +713,7 @@ kubectl delete [-f <filename>] [TYPE/NAME] [-o [wide|yaml]]
 
 **現在のディレクトリを確認**:
 
-```bash
+```bash:minikube
 root@minikube:~# pwd
 /root
 root@minikube:~#
@@ -723,7 +723,7 @@ root@minikube:~#
 
 名前は何でもよいですが、とりあえず `tutorial` ディレクトリとしておきます。
 
-```bash
+```bash:minikube
 root@minikube:~# mkdir ./tutorial
 ```
 
@@ -731,7 +731,7 @@ root@minikube:~# mkdir ./tutorial
 
 `root` 直下に `tutorial` ディレクトリが作成されていることを確認します。
 
-```bash
+```bash:minikube
 root@minikube:~# ls -l
 total 4
 drwxr-xr-x 2 root root 4096 May 27 23:05 tutorial
@@ -775,14 +775,14 @@ spec:
 
 **作業ディレクトリに移動**:
 
-```bash
+```bash:minikube
 root@minikube:~# cd tutorial
 root@minikube:~/tutorial#
 ```
 
 **リソースの作成**:
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f pod.yml
 pod/nginx created
 root@minikube:~/tutorial#
@@ -790,7 +790,7 @@ root@minikube:~/tutorial#
 
 **作成されたリソースの確認**:
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl get pod
 NAME    READY   STATUS              RESTARTS   AGE
 nginx   0/1     ContainerCreating   0          52s
@@ -801,7 +801,7 @@ root@minikube:~/tutorial#
 
 **リソースの削除**:
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl delete -f pod.yml
 pod "nginx" deleted
 root@minikube:~/tutorial#
@@ -809,7 +809,7 @@ root@minikube:~/tutorial#
 
 **削除の確認**:
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl get pod
 No resources found in default namespace.
 root@minikube:~/tutorial#
@@ -935,7 +935,7 @@ spec:
 この構文は以前のバージョンの構文のため誤りとなります。  
 最新バージョンの構文は後述で記載しますので、下記は無視してください🙇‍♂️
 
-```bash
+```bash:minikube
 kubectl exec -it POD sh
 ```
 
@@ -946,13 +946,13 @@ POD：中に入りたいPod名
 
 ・プロセスを終了してからログアウト
 
-```bash
+```bash:minikube
 exit
 ```
 
 ・プロセスを残したままコンテナからログアウト
 
-```bash
+```bash:minikube
 [ctrl + P] + [ctrl + Q]
 ```
 
@@ -1029,14 +1029,14 @@ spec:
 
 テキストエディタのコマンドラインから、下記コマンドを実行して `tutorial` ディレクトリに移動します:
 
-```bash
+```bash:minikube
 root@minikube:~# cd tutorial/
 root@minikube:~/tutorial#
 ```
 
 リソースの作成を実行します:
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f pods.yml
 pod/debug created
 pod/nginx created
@@ -1046,7 +1046,7 @@ root@minikube:~/tutorial#
 3.作成したPodのIPアドレスを確認します。  
 `-o wide` オプションで、PodのIPアドレスを確認できます:
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl get pod -o wide
 NAME    READY   STATUS             RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
 debug   0/1     ImagePullBackOff   0          3m57s   10.244.0.18   minikube   <none>           <none>
@@ -1057,7 +1057,7 @@ root@minikube:~/tutorial#
 4.次に、本題のコンテナへの入り方を記載します。  
 `debug` コンテナに入ります。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it debug sh
 error: exec [POD] [COMMAND] is not supported anymore. Use exec [POD] -- [COMMAND] instead
 See 'kubectl exec -h' for help and examples
@@ -1071,7 +1071,7 @@ root@minikube:~/tutorial#
 `kubectl exec -it POD sh` コマンドの代わりに、 `kubectl exec -it POD -- ssh` を使用します。  
 これで、コンテナ内に入ることがでるはずです。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it debug -- sh
 sh-4.2#
 ```
@@ -1079,14 +1079,14 @@ sh-4.2#
 入れました！  
 `exit` コマンドでコンテナから出て、残りの `nginx` コンテナへのアクセスを確認します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it nginx -- sh
 / #
 ```
 
 **補足：コンテナへ入る(最新バージョン)**:
 
-```bash
+```bash:minikube
 kubectl exec -it POD -- sh
 ```
 
@@ -1108,7 +1108,7 @@ POD：中に入りたいPod名
 
 6.最後に、作成したPodを削除します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl delete -f pods.yml
 pod "debug" deleted
 pod "nginx" deleted
@@ -1126,7 +1126,7 @@ Pod内のファイルをホスト側にコピーするには、`kubectl cp` コ�
 **▼ホスト側のファイルをPod内にコピー**
 基本構文:
 
-```bash
+```bash:minikube
 kubectl cp SRC PODNAME:DEST
 ```
 
@@ -1138,7 +1138,7 @@ DEST: Pod内のファイルのパス
 **▼Pod内のファイルをホスト側にコピー**
 基本構文:
 
-```bash
+```bash:minikube
 kubectl cp PODNAME:SRC DEST
 ```
 
@@ -1197,14 +1197,14 @@ Hello World !
 2.作成したマニフェストファイルを起動させます。  
 テキストエディタのコマンドラインから、下記コマンドを実行して `tutorial` ディレクトリに移動します:
 
-```bash
+```bash:minikube
 root@minikube:~# cd tutorial/
 root@minikube:~/tutorial#
 ```
 
 リソースの作成を実行します:
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f pod.yml
 pod/debug created
 root@minikube:~/tutorial#
@@ -1212,7 +1212,7 @@ root@minikube:~/tutorial#
 
 作成できたことを念のため確認します:
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl get pod
 NAME    READY   STATUS    RESTARTS   AGE
 debug   1/1     Running   0          85s
@@ -1222,14 +1222,14 @@ root@minikube:~/tutorial#
 3.ホスト内に作成した `sample.txt` を、作成した `CentOS` コンテナ内の `/var/tmp` ディレクトリへ転送します。  
 わかりやすくするため、転送先のテキストファイル名を変更しています。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl cp ./sample.txt debug:/var/tmp/sample_transfer.txt
 root@minikube:~/tutorial#
 ```
 
 コンテナ内に入り、ファイルが転送されたことを確認します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it debug -- sh
 sh-4.2# ls /var/tmp/sample_transfer.txt
 /var/tmp/sample_transfer.txt
@@ -1240,7 +1240,7 @@ sh-4.2#
 手順としては、空ファイルを作成して `vi` コマンドで `Received Successfully!` と記載します。  
 その後にコンテナから抜けて、ホスト側にコピーします。
 
-```bash
+```bash:minikube
 sh-4.2# ~
 sh-4.2# touch /var/tmp/sample_receive.txt
 sh-4.2# ls /var/tmp/sample_receive.txt
@@ -1259,7 +1259,7 @@ root@minikube:~/tutorial#
 
 5.最後に、作成したPodを削除します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl delete -f pod.yml
 pod "debug" deleted
 root@minikube:~/tutorial#
@@ -1274,7 +1274,7 @@ root@minikube:~/tutorial#
 **▼Podの状態を確認**
 基本構文:
 
-```bash
+```bash:minikube
 kubectl describe [TYPE/NAME]
 ```
 
@@ -1285,7 +1285,7 @@ NAME: リソースの名前
 **▼ログの詳細を確認**
 基本構文:
 
-```bash
+```bash:minikube
 kubectl logs [TYPE/NAME] [--tail=n]
 ```
 
@@ -1359,7 +1359,7 @@ spec:
 
 起動します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f pods.yml
 pod/debug created
 pod/nginx created
@@ -1371,7 +1371,7 @@ root@minikube:~/tutorial#
 
 ::: details kubectl describe pod/debug
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl describe pod/debug
 Name:             debug
 Namespace:        default
@@ -1445,7 +1445,7 @@ root@minikube:~/
 
 ::: details kubectl describe pod/nginx
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl describe pod/nginx
 Name:             nginx
 Namespace:        default
@@ -1508,7 +1508,7 @@ root@minikube:~/tutorial#
 3.`CentOS` のPodに接続して `nginx` へアクセスしてアクセスログを見てみます。  
 その前に、作成したコンテナのIPアドレスを確認します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl get pod -o wide
 NAME    READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
 debug   1/1     Running   0          8m57s   10.244.0.26   minikube   <none>           <none>
@@ -1518,7 +1518,7 @@ root@minikube:~/tutorial#
 
 本題の`CentOS` のPodに接続して `nginx` へアクセスしてアクセスログを見てみます。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl exec -it debug -- sh
 sh-4.2#
 ```
@@ -1527,7 +1527,7 @@ sh-4.2#
 
 ::: details curl実行結果
 
-```bash
+```bash:minikube
 sh-4.2# curl 10.244.0.25
 <!DOCTYPE html>
 <html>
@@ -1563,7 +1563,7 @@ sh-4.2#
 
 5.6. コンテナから出て、`nginx` のPodの状態を確認します。
 
-```bash
+```bash:minikube
 sh-4.2# exit
 exit
 root@minikube:~/tutorial# kubectl logs pod/nginx
@@ -1575,7 +1575,7 @@ root@minikube:~/tutorial#
 
 7.Podを削除します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl delete -f pods.yml
 pod "debug" deleted
 pod "nginx" deleted
@@ -1669,7 +1669,7 @@ spec:
 
 1.まずはKubernetesのホストにフォルダとファイルを作成します。
 
-```bash
+```bash:minikube
 root@minikube:~# mkdir /data/strage
 root@minikube:~# ls /data/
 strage
@@ -1705,7 +1705,7 @@ spec:
 リソース作成前に、1.で作成したディレクトリ直下にファイルを作成して、 `/home/nginx` から作成したファイルを参照できるか確認してみます。  
 対象のディレクトリ `/data/storage` に移動し、 配下に `message` ファイルを作成し、内容は `Hello World!` とします。
 
-```bash
+```bash:minikube
 root@minikube:~# cd /data/storage/
 root@minikube:/data/storage# vi message
 root@minikube:/data/storage# cat message
@@ -1716,7 +1716,7 @@ root@minikube:/data/storage#
 3.リソースを作成し、作成したPodに接続してファイルの内容を確認します。  
 まずは `tutorial` ディレクトリに移動し、リソースを作成してコンテナ内に接続します。
 
-```bash
+```bash:minikube
 root@minikube:~# cd tutorial/
 root@minikube:~/tutorial# kubectl apply -f pod.yml
 pod/sample created
@@ -1729,7 +1729,7 @@ root@minikube:~/tutorial# kubectl exec -it sample -- sh
 
 `/home/nginx` にマウントしたディレクトリに移動し、ファイルの内容を確認します。
 
-```bash
+```bash:minikube
 / # cd /home/nginx/
 /home/nginx # ls
 message
@@ -1755,7 +1755,7 @@ HEllo World!
 - Podのステータスが変化した場合に、指定した数のPodを自動で起動する
 
 下記 replicaset.yml の例を見てみましょう。  
-:::details tutorial/replicaset.yml
+:::details replicaset.yml
 
 ```yaml:replicaset.yml
 apiVersion: apps/v1
@@ -1844,7 +1844,7 @@ spec:
 
 2.リソースを作成します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f replicaset.yml
 replicaset.apps/nginx created
 root@minikube:~/tutorial#
@@ -1853,7 +1853,7 @@ root@minikube:~/tutorial#
 出力結果から、3つのPodが作成されていることが確認できます。  
 また、 `kubectl get all` コマンドですべてのリソースの状態を確認することができます。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl get all
 NAME              READY   STATUS    RESTARTS   AGE
 pod/nginx-mp4bl   1/1     Running   0          60m
@@ -1901,7 +1901,7 @@ spec:
 
 変更したマニフェストファイルを適用し、リソースを再度作成します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f replicaset.yml
 replicaset.apps/nginx configured
 root@minikube:~/tutorial# kubectl get all
@@ -1938,7 +1938,7 @@ root@minikube:~/tutorial#
 - Podのステータスが変化した場合に、指定した数のPodを自動で起動する
 
 下記 deployment.yml の例を見てみましょう。
-:::details tutorial/deployment.yml
+:::details deployment.yml
 
 ```yaml:deployment.yml
 apiVersion: apps/v1
@@ -2007,7 +2007,7 @@ spec:
 
 ロールアウト履歴を表示するコマンドは以下の通りです。
 
-```bash
+```bash:minikube
 kubectl rollout history [TYPE/NAME] --to-revision=N
 ```
 
@@ -2070,7 +2070,7 @@ spec:
 
 2.リソースを作成します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f deployment.yml
 deployment.apps/nginx created
 root@minikube:~/tutorial# kubectl get all
@@ -2091,7 +2091,7 @@ root@minikube:~/tutorial#
 
 5.ロールアウト履歴を確認します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl rollout history deployment/nginx
 deployment.apps/nginx
 REVISION  CHANGE-CAUSE
@@ -2142,7 +2142,7 @@ spec:
 :::
 再度リソースを作成して、ロールアウト履歴を確認します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl apply -f deployment.yml
 deployment.apps/nginx configured
 root@minikube:~/tutorial# kubectl rollout history deploy/nginx
@@ -2158,7 +2158,7 @@ annotations に記載したメッセージが、ロールアウト履歴に表�
 しかし、nginxのバージョンがUpした履歴が出力されていません。  
 それに対しては、リビジョンを指定することで確認できます。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl rollout history deploy/nginx --revision=2
 deployment.apps/nginx with revision #2
 Pod Template:
@@ -2185,7 +2185,7 @@ root@minikube:~/tutorial#
 
 6.直前のバージョンに戻すには、以下のコマンドを実行します。
 
-```bash
+```bash:minikube
 root@minikube:~/tutorial# kubectl rollout undo deployment/nginx
 deployment.apps/nginx rolled back
 root@minikube:~/tutorial# kubectl rollout history deploy/nginx
@@ -2205,7 +2205,372 @@ REVISION 3 が追加され、ロールバックされました。
 
 ### Service
 
+`Service` は、外部公開、内部通信、名前解決などの機能を提供します。  
+種別としては、以下の種類があります。
+
+- **ClusterIP**
+  - クラスタネットワーク内にIPアドレスを公開
+  - 名前設定でPodへ到達できるようにする
+- **NodePort**
+  ClusterIP に加え、Node のポートにマッピングして受け付けられるようにする
+- **LoadBalancer**
+  NodePort に加え、クラウドプロバイダのロードバランサーを利用してサービスを公開する
+- **ExternalName**
+  外部サービスに接続
+
+下記 service.yml の例を見てみましょう。
+
+::: details service.yml
+
+```yaml:service.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: web
+    env: study
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.17.2-alpine
+
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc
+spec:
+  type: ClusterIP
+  clusterIP: 10.101.10.100
+  selector:
+    app: web
+    env: study
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30000
+```
+
+:::
+
+一例として、マニフェストファイルの書き方について、主要な spec は以下の通り記載します。  
+**※下記はあくまで一例であり、調べてみた結果他にも種類がありました。**  
+**その他の種類については公式ドキュメントを参照してください。**  
+[Kubernetes公式ドキュメント:Service](https://kubernetes.io/docs/concepts/services-networking/service/)
+
+**containers**:
+
+- `spec.containers`: コンテナの設定
+  - `spec.containers.image`: コンテナイメージ
+- `spec.type`: サービスの種類
+- `spec.clusterIP`: クラスターIP
+  - `spec.clusterIP` を指定しない場合、自動的にクラスターIPが割り当てられる
+  - `spec.clusterIP` を指定した場合、指定したクラスターIPが割り当てられる
+- `spec.selector`: サービスのラベル
+- `spec.ports`: サービスのポート
+  - `spec.ports.port`: サービスのポート
+  - `spec.ports.targetPort`: コンテナ転送先ポート
+  - `spec.ports.nodePort`: Nodeのポート
+
+#### 演習
+
+```txt
+1.NodePortのServiceマニフェストファイルを作成
+2.リソース作成
+3.ブラウザへアクセスして動作確認
+```
+
+1.NodePortのServiceマニフェストファイルを作成します。
+::: details tutorial/service.yml
+
+```yaml:tutorial/service.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: web
+    env: study
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.17.2-alpine
+    ports:
+    - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc
+spec:
+  type: NodePort
+  selector:
+    app: web
+    env: study
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30000
+```
+
+:::
+
+2.リソースを作成します。
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl apply -f service.yml
+pod/nginx created
+service/web-svc created
+root@minikube:~/tutorial#
+```
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl get all
+NAME        READY   STATUS    RESTARTS   AGE
+pod/nginx   1/1     Running   0          11s
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        6d21h
+service/web-svc      NodePort    10.102.57.173   <none>        80:30000/TCP   11s
+root@minikube:~/tutorial#
+```
+
+`web-svc` リソースが作成されました。
+
+3.ブラウザへアクセスして動作確認します。
+前段で作成した service.yml に記載の通り、80番ポートから NodePort の30000番ポートにアクセスします。  
+やり方としては、仮想マシンのIPアドレスのあとに `:30000` を付与します。  
+自端末のターミナルから、以下コマンドを実行すると仮想マシンのIPアドレスを確認できます。
+
+```bash:terminal
+minikube ip
+192.168.49.2
+```
+
+上のコマンド結果から、`192.168.49.2:30000` となります。
+
+![access-loop](/images/kubernetes-tutorial/access-loop.png)
+
+アクセスできないようですので、原因の確認をします。  
+確実な方法として、ポートフォワーディングでの確認を自端末から実施します。
+
+```bash:terminal
+kubectl port-forward service/web-svc 8080:80
+```
+
+ブラウザで <http://localhost:8080> にアクセス。
+
+![port-forward](/images/kubernetes-tutorial/port-forward.png)
+
+ひとまず表示されたようです。
+
+次に、 `minikube service web-avc` コマンドを実行して、ブラウザでアクセスします。
+
+```bash:terminal
+minikube service web-svc
+
+|-----------|---------|-------------|---------------------------|
+| NAMESPACE |  NAME   | TARGET PORT |            URL            |
+|-----------|---------|-------------|---------------------------|
+| default   | web-svc |          80 | http://192.168.49.2:30000 |
+|-----------|---------|-------------|---------------------------|
+🏃  web-svc サービス用のトンネルを起動しています。
+|-----------|---------|-------------|------------------------|
+| NAMESPACE |  NAME   | TARGET PORT |          URL           |
+|-----------|---------|-------------|------------------------|
+| default   | web-svc |             | http://127.0.0.1:51389 |
+|-----------|---------|-------------|------------------------|
+🎉  デフォルトブラウザーで default/web-svc サービスを開いています...
+❗  Docker ドライバーを darwin 上で使用しているため、実行するにはターミナルを開く必要があります。
+```
+
+これだとアクセスできるようですが、転送先のポート番号が変わっています。
+
+::: details 30000ポート調査
+
+```bash:terminal
+sudo lsof -i -P -n | grep LISTEN
+
+ControlCe   598         wan0ri    8u  IPv4  0x3afdecce503bcbc      0t0    TCP *:7000 (LISTEN)
+ControlCe   598         wan0ri    9u  IPv6 0x99f4c63a72bbee16      0t0    TCP *:7000 (LISTEN)
+ControlCe   598         wan0ri   10u  IPv4 0xff7d2e786c2f4154      0t0    TCP *:5000 (LISTEN)
+ControlCe   598         wan0ri   11u  IPv6 0x7b0ab8d631810a8f      0t0    TCP *:5000 (LISTEN)
+rapportd    647         wan0ri    8u  IPv4 0xe787816e3568c0c0      0t0    TCP *:49152 (LISTEN)
+rapportd    647         wan0ri    9u  IPv6 0xe16e33c168b68887      0t0    TCP *:49152 (LISTEN)
+Raycast     683         wan0ri   42u  IPv4 0x66633fceb00a43dc      0t0    TCP 127.0.0.1:7265 (LISTEN)
+logioptio   739         wan0ri   40u  IPv4 0xf6c87394e39caa96      0t0    TCP *:59869 (LISTEN)
+Stream      748         wan0ri   21u  IPv4 0x1584f5c902f4fc3e      0t0    TCP 127.0.0.1:28196 (LISTEN)
+Stream      748         wan0ri   83u  IPv6 0x2029c113012954bd      0t0    TCP *:28198 (LISTEN)
+Google      825         wan0ri   43u  IPv6 0x785b2916e715207f      0t0    TCP [::1]:7679 (LISTEN)
+Cursor     1834         wan0ri   28u  IPv4  0xf1e43c229680aa6      0t0    TCP 127.0.0.1:49656 (LISTEN)
+Cursor     1836         wan0ri  101u  IPv6 0x5396a379897848a3      0t0    TCP *:49900 (LISTEN)
+com.docke  3641         wan0ri  142u  IPv4 0xd0d37d36cd1fe794      0t0    TCP 127.0.0.1:49647 (LISTEN)
+com.docke  3641         wan0ri  164u  IPv4 0x7beb3108c1e8146b      0t0    TCP 127.0.0.1:49648 (LISTEN)
+com.docke  3641         wan0ri  165u  IPv4 0xa7501b375430a281      0t0    TCP 127.0.0.1:49649 (LISTEN)
+com.docke  3641         wan0ri  166u  IPv4 0x4422138d50fce971      0t0    TCP 127.0.0.1:49650 (LISTEN)
+com.docke  3641         wan0ri  175u  IPv4 0xc75cc9a524e61117      0t0    TCP 127.0.0.1:49651 (LISTEN)
+com.docke  3641         wan0ri  186u  IPv4 0xcdfa1e7b642cea8b      0t0    TCP 127.0.0.1:6443 (LISTEN)
+ssh        4848         wan0ri    5u  IPv6 0xdb9cf91b4ecd09a4      0t0    TCP [::1]:50720 (LISTEN)
+ssh        4848         wan0ri    6u  IPv4 0x281c149607849139      0t0    TCP 127.0.0.1:50720 (LISTEN)
+Cursor     5389         wan0ri   35u  IPv4 0x8a7d5f1734985fb2      0t0    TCP 127.0.0.1:46329 (LISTEN)
+node       5657         wan0ri   14u  IPv6 0x2889e17cd884fa2c      0t0    TCP *:49901 (LISTEN)
+kubectl    6078         wan0ri    8u  IPv4 0xa3c01d69d3e2afda      0t0    TCP 127.0.0.1:8080 (LISTEN)
+kubectl    6078         wan0ri    9u  IPv6 0x1183030740956343      0t0    TCP [::1]:8080 (LISTEN)
+ssh        9893         wan0ri    5u  IPv6 0x6a940d1f8ec2aa14      0t0    TCP [::1]:51731 (LISTEN)
+ssh        9893         wan0ri    6u  IPv4 0x857aab088d9057f4      0t0    TCP 127.0.0.1:51731 (LISTEN)
+
+sudo lsof -i :30000
+
+netstat -an | grep LISTEN
+
+tcp4       0      0  127.0.0.1.51731        *.*                    LISTEN
+tcp6       0      0  ::1.51731              *.*                    LISTEN
+tcp6       0      0  ::1.8080               *.*                    LISTEN
+tcp4       0      0  127.0.0.1.8080         *.*                    LISTEN
+tcp4       0      0  127.0.0.1.50720        *.*                    LISTEN
+tcp6       0      0  ::1.50720              *.*                    LISTEN
+tcp4       0      0  127.0.0.1.49656        *.*                    LISTEN
+tcp46      0      0  *.28198                *.*                    LISTEN
+tcp46      0      0  *.49901                *.*                    LISTEN
+tcp46      0      0  *.49900                *.*                    LISTEN
+tcp4       0      0  127.0.0.1.46329        *.*                    LISTEN
+tcp4       0      0  127.0.0.1.49651        *.*                    LISTEN
+tcp4       0      0  127.0.0.1.49650        *.*                    LISTEN
+tcp4       0      0  127.0.0.1.49649        *.*                    LISTEN
+tcp4       0      0  127.0.0.1.49648        *.*                    LISTEN
+tcp4       0      0  127.0.0.1.49647        *.*                    LISTEN
+tcp4       0      0  127.0.0.1.6443         *.*                    LISTEN
+tcp4       0      0  *.59869                *.*                    LISTEN
+tcp4       0      0  127.0.0.1.28196        *.*                    LISTEN
+tcp6       0      0  ::1.7679               *.*                    LISTEN
+tcp4       0      0  127.0.0.1.7265         *.*                    LISTEN
+tcp6       0      0  *.49152                *.*                    LISTEN
+tcp4       0      0  *.49152                *.*                    LISTEN
+tcp6       0      0  *.5000                 *.*                    LISTEN
+tcp4       0      0  *.5000                 *.*                    LISTEN
+tcp6       0      0  *.7000                 *.*                    LISTEN
+tcp4       0      0  *.7000                 *.*                    LISTEN
+
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
+Firewall is enabled. (State = 1)
+
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --listapps
+Total number of apps = 15
+1 : /usr/libexec/dhcp6d
+             (Allow incoming connections)
+2 : /Library/Application Support/Logitech.localized/LogiOptionsPlus/logioptionsplus_agent.app/Contents/MacOS/logioptionsplus_agent
+             (Allow incoming connections)
+3 : /System/Library/CoreServices/UniversalControl.app/Contents/MacOS/UniversalControl
+             (Allow incoming connections)
+4 : /System/Library/CoreServices/ControlCenter.app/Contents/MacOS/ControlCenter
+             (Allow incoming connections)
+5 : /System/Library/PrivateFrameworks/ReplicatorCore.framework/Support/replicatord
+             (Allow incoming connections)
+6 : /Applications/Google Chrome.app
+             (Allow incoming connections)
+7 : /Applications/Spotify.app
+             (Allow incoming connections)
+8 : /usr/libexec/rapportd
+             (Allow incoming connections)
+9 : /usr/libexec/remoted
+             (Allow incoming connections)
+10 : /usr/bin/python3
+             (Allow incoming connections)
+11 : /usr/bin/ruby
+             (Allow incoming connections)
+12 : /usr/sbin/cupsd
+             (Allow incoming connections)
+13 : /usr/libexec/sharingd
+             (Allow incoming connections)
+14 : /usr/libexec/sshd-keygen-wrapper
+             (Allow incoming connections)
+15 : /usr/sbin/smbd
+             (Allow incoming connections)
+```
+
+:::
+
+そもそも、30000ポートはブロックされているわけではなく、**そのポートでリッスンしているプロセスが存在しない**ことがわかりました。
+
+- ✅ ファイアウォールは有効だが、30000番ポートをブロックしていない
+- ✅ 8080番ポート（kubectl port-forward）は正常にリッスン中
+- ❌ 30000番ポートでリッスンしているプロセスが存在しない
+
+このことから、マニフェストファイルで割り当てている30000ポートを修正し、動的にポートを割り当てるように修正します。
+
+::: details マニフェストファイル修正
+
+```yaml:tutorial/service.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: web
+    env: study
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.17.2-alpine
+    ports:
+    - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc
+spec:
+  type: NodePort
+  selector:
+    app: web
+    env: study
+  ports:
+  - port: 80
+    targetPort: 80
+    # nodePort: 30000 = 自動割り当てのため、明示的に指定しない
+```
+
+:::
+
+再度リソースを作成し、実際に割り当てられたポートを確認します。
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl apply -f service.yml
+pod/nginx created
+service/web-svc created
+root@minikube:~/tutorial# kubectl get service web-svc
+NAME      TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+web-svc   NodePort   10.105.161.23   <none>        80:30410/TCP   9s
+root@minikube:~/tutorial#
+```
+
+次に、自端末からアクセスコマンドを実行し、ブラウザで確認してみます。
+
+```bash:terminal
+minikube service web-svc
+|-----------|---------|-------------|---------------------------|
+| NAMESPACE |  NAME   | TARGET PORT |            URL            |
+|-----------|---------|-------------|---------------------------|
+| default   | web-svc |          80 | http://192.168.49.2:30410 |
+|-----------|---------|-------------|---------------------------|
+🏃  web-svc サービス用のトンネルを起動しています。
+|-----------|---------|-------------|------------------------|
+| NAMESPACE |  NAME   | TARGET PORT |          URL           |
+|-----------|---------|-------------|------------------------|
+| default   | web-svc |             | http://127.0.0.1:53016 |
+|-----------|---------|-------------|------------------------|
+🎉  デフォルトブラウザーで default/web-svc サービスを開いています...
+❗  Docker ドライバーを darwin 上で使用しているため、実行するにはターミナルを開く必要があります。
+```
+
+![access-retry](/images/kubernetes-tutorial/access-retry.png)
+
+無事にアクセスできました！🎉
+
+確認自体が完了しましたので、リソースを削除して完了します。
 
 ### ConfigMap
 
