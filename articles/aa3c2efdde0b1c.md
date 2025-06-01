@@ -2998,6 +2998,159 @@ YOUR-SECRET-KEY/ #
 
 ### 永続データ (PersistentVolume, PersistentVolumeClaim)
 
+#### PersistentVolume(PV) とは？
+
+永続データの実態のこと。
+
+- ストレージの接続情報
+- ストレージの抽象化
+
+**▼マニフェストファイルの実装方法**:
+
+```yaml:pv.yml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-storage
+  spec:
+  # ストレージ抽象化を定義する3プロパティ (storageClassName, accessModes, capacity)
+  storageClassName: host
+  accessModes: [ReadWriteOnce]
+  capacity:
+  storage: 1Gi
+  # 削除動作を定義するプロパティ (persistentVolumeReclaimPolicy)
+  persistentVolumeReclaimPolicy: Retain
+  # 保存先を定義するプロパティ (hostPath)
+  hostPath:
+  path: /data/storage
+  type: Directory
+```
+
+**ストレージ抽象化を定義する3プロパティ**:
+
+- `storageClassName`: ストレージの種類を指定
+- `accessModes`: アクセスモードを指定
+  - `ReadWriteOnce`: 読み書き可能
+  - `ReadOnlyMany`: 読み込みのみ可能
+  - `ReadWriteMany`: 読み書き可能
+- `capacity`: ストレージの容量を指定
+
+**削除動作を定義するプロパティ**:
+
+- `persistentVolumeReclaimPolicy`: 削除時の動作を指定
+- `Retain`: 削除時にストレージは削除されない
+- `Delete`: 削除時にストレージは削除される
+- `Recycle`: (**Kubernetes v1.15以降で非推奨**)削除時にストレージは削除される
+
+**保存先を定義するプロパティ**:
+
+- `hostPath`: ホストマシンのパスを指定
+- `path`: ホストマシンのパスを指定
+- `type`: ホストマシンのパスのタイプを指定
+  - `DirectoryOrCreate`: ディレクトリが存在しない場合は作成
+  - `Directory`: ディレクトリが存在しない場合はエラー
+  - `FileOrCreate`: ファイルが存在しない場合は作成
+  - `File`: ファイルが存在しない場合はエラー
+
+#### PersistentVolumeClaim(PVC) とは？
+
+永続データを要求するもの。
+
+**▼マニフェストファイルの実装方法**:
+
+```yaml:pvc.yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-storage
+  spec:
+  # ストレージ抽象化を定義する3プロパティ (storageClassName, accessModes, resources)
+  storageClassName: host
+  accessModes: [ReadWriteOnce]
+  resources:
+  requests:
+  storage: 1Gi
+```
+
+PVと違い、PVCは要求する動きになっているので `requests` を指定します。
+
+#### 演習
+
+```txt:お題目
+1.PVとPVCを含むマニフェストファイルの作成
+2.リソースの作成
+```
+
+1.PVとPVCを含むマニフェストファイルを作成します:
+
+::: details storage.yml
+
+```yaml:storage.yml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-01
+  labels:
+    env: study
+spec:
+  storageClassName: slow
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/data/storage"
+    type: Directory
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: volume-claim
+  labels:
+    env: study
+spec:
+  storageClassName: slow
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+```
+
+:::
+
+リソースを作成する前に、ホストマシンにディレクトリを作成します:
+
+```bash:minikube
+root@minikube:~/tutorial# mkdir -p /data/storage
+root@minikube:~/tutorial#
+root@minikube:~/tutorial# ls /data
+storage
+root@minikube:~/tutorial#
+```
+
+2.リソースを作成します:
+
+```bash:minikube
+root@minikube:~/tutorial# kubectl apply -f storage.yml
+persistentvolume/volume-01 created
+persistentvolumeclaim/volume-claim created
+root@minikube:~/tutorial# kubectl get pvc,pv
+NAME                                 STATUS   VOLUME      CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/volume-claim   Bound    volume-01   1Gi        RWO            slow           <unset>                 57s
+
+NAME                         CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                  STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+persistentvolume/volume-01   1Gi        RWO            Retain           Bound    default/volume-claim   slow           <unset>                          57s
+root@minikube:~/tutorial#
+```
+
+出力結果が見にくいが、 `volume-01` という名前のPVが作成されていることが確認できます。  
+**PV側にPVCがマウントされている**ことが確認できます。
+演習としては完了なので、コンテナから抜けてPodを削除します。
+
 ---
 
 ### StatefulSet
