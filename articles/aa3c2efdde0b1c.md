@@ -1629,12 +1629,11 @@ spec:
 
 :::
 
-マニフェストファイルの書き方については以下の通りになり、主要な spec は `containers` と `volumes` です。  
-例題について細かく分解して見ていきたいと思います。
+一例として、マニフェストファイルの書き方について、主要な spec は以下の通り記載します。
 
 **※下記はあくまで一例であり、調べてみた結果他にも種類がありました。**  
 **その他の種類については公式ドキュメントを参照してください。**  
-[Kubernetes公式ドキュメント：containers(英語)](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)  
+[Kubernetes公式ドキュメント：containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)  
 [Kubernetes公式ドキュメント：volumes](https://kubernetes.io/ja/docs/concepts/storage/volumes/)
 
 **containers**:
@@ -1754,7 +1753,6 @@ HEllo World!
 - Podのスケールアウト・スケールインを自動で行う
 - Podのステータスを監視する
 - Podのステータスが変化した場合に、指定した数のPodを自動で起動する
-  - 例えば、Podが異常終了した場合に、指定した数のPodを自動で起動する
 
 下記 replicaset.yml の例を見てみましょう。  
 :::details tutorial/replicaset.yml
@@ -1784,8 +1782,9 @@ spec:
 
 :::
 
-マニフェストファイルの書き方については以下の通りになり、主要な spec は `replicas` 、 `selector` 、 `template` です。  
-例題について細かく分解して見ていきたいと思います。  
+一例として、マニフェストファイルの書き方について、主要な spec は以下の通り記載します。  
+**※下記はあくまで一例であり、調べてみた結果他にも種類がありました。**  
+**その他の種類については公式ドキュメントを参照してください。**  
 [Kubernetes公式ドキュメント：ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
 **replicas**:
@@ -1929,7 +1928,85 @@ root@minikube:~/tutorial#
 
 ### Deployment
 
----
+`Deployment` とは、 ReplicaSet の集合体で、それらの世代管理ができるリソースです。  
+詳細については、以下の通りになります。
+
+- Podのレプリカを管理する
+- Podの数を指定することができる
+- Podのスケールアウト・スケールインを自動で行う
+- Podのステータスを監視する
+- Podのステータスが変化した場合に、指定した数のPodを自動で起動する
+
+下記 deployment.yml の例を見てみましょう。
+:::details tutorial/deployment.yml
+
+```yaml:deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  annotations:
+    kubernetes.io/change-cause: "First release."
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+      env: study
+  revisionHistoryLimit: 14
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: web
+        env: study
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17.2-alpine
+
+```
+
+:::
+
+一例として、マニフェストファイルの書き方について、主要な spec は以下の通り記載します。  
+**※下記はあくまで一例であり、調べてみた結果他にも種類がありました。**  
+**その他の種類については公式ドキュメントを参照してください。**  
+[Kubernetes公式ドキュメント：Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+**replicas**:
+
+- `spec.replicas`：Podを複製する数を指定
+
+**selector**:
+
+- `spec.selector`：Podのラベルを指定
+- `spec.selector.matchLabels`：Podのラベルを指定
+- `spec.selector.matchLabels.app`：Podのラベルを指定
+- `spec.selector.matchLabels.env`：Podのラベルを指定
+
+**revisionHistoryLimit**:
+
+- `spec.revisionHistoryLimit`：Deploymentの履歴を保持する数を指定
+
+**strategy**:
+
+- `spec.strategy.rollingUpdate.maxSurge`：スケールアウト時に作成するPodの数を指定
+- `spec.strategy.rollingUpdate.maxUnavailable`：スケールイン時に削除するPodの数を指定
+- `spec.strategy.type`：スケーリングのタイプを指定
+- `spec.strategy.rollingUpdate.maxUnavailable`：スケールイン時に削除するPodの数を指定
+- `spec.strategy.rollingUpdate.maxSurge`：スケールアウト時に作成するPodの数を指定s
+
+**template**:
+
+- `spec.template.metadata.labels`：Podのラベルを指定
+- `spec.template.spec.containers.name`：コンテナ名を指定
+- `spec.template.spec.containers.image`：コンテナイメージを指定
 
 ### Service
 
