@@ -4,7 +4,7 @@ emoji: "🕸️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [Kubernetes, Docker]
 published: true
-published_at: 2027-05-31 09:00
+published_at: 2025-06-04 09:00
 ---
 
 ## 🙇‍♂️ はじめに
