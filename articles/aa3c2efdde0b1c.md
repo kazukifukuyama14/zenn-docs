@@ -13,8 +13,9 @@ published_at: 2027-05-31 09:00
 
 そこで、この記事ではKubernetesの基礎的な知識を掲載しようと思います。
 
-実際のハンズオンは下記の記事よりご覧ください🙇‍♂️  
-<https://zenn.dev/milly_s/articles/4796bd18a92b47>
+実際のハンズオンは下記の記事よりご覧ください🙇‍♂️
+
+https://zenn.dev/wan0ri/articles/4796bd18a92b47
 
 ## 🎯 冒頭のご挨拶
 
@@ -29,17 +30,18 @@ published_at: 2027-05-31 09:00
 
 Dockerはコンテナを作成・管理するために必要です。  
 以下のリンクから自分の環境に合わせてインストールします。
-<https://docs.docker.com/engine/install/>
+
+https://docs.docker.com/engine/install/
 
 ---
 
 ### IDE（開発環境）
 
 Visual Studio Codeなど慣れているものでいいとは思いますが、私はCursorを使用していきます。  
-<https://www.cursor.com/ja>
+https://www.cursor.com/ja
 
 また、テキストエディタには拡張機能「**Remote SSH**」が必要ですのでそちらをインストールしておきます。  
-<https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh>
+https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
 
 ---
 
@@ -56,7 +58,7 @@ brew install minikube
 ```
 
 (参考)  
-<https://qiita.com/Asaminnn/items/6d414d4776d964e94e96>
+https://qiita.com/Asaminnn/items/6d414d4776d964e94e96
 
 ## 📚 Kubernetesの基礎知識
 
@@ -240,7 +242,7 @@ ifconfig
 ```
 
 (参考)  
-<https://qiita.com/nlog2n2/items/1d1358f6913249f3e186>
+https://qiita.com/nlog2n2/items/1d1358f6913249f3e186
 
 Remote SSHのconfig設定は、以下で進めていきます。
 
@@ -339,8 +341,8 @@ pod/hello-world created
 - `hello-world` : Kubernetesのイメージ名
 - `--restart=Never` : 起動方法の指定※
 
-※起動方法には `Always` や `OnFailure`がある。以下参考。  
-<https://qiita.com/ssc-wkani/items/ee0930001c0663358392>
+※起動方法には `Always` や `OnFailure`があります。  
+https://qiita.com/ssc-wkani/items/ee0930001c0663358392
 
 #### 起動状況の確認
 
@@ -932,8 +934,9 @@ spec:
 
 結論になりますが、 Kubernetes公式ドキュメントの[Kubernetes APIリファレンス](https://kubernetes.io/docs/reference/kubernetes-api/)を参照すると確認できます。
 
-例えば前段でも記載した `pod.yml` の apiVersion は `v1` となっており、リファレンスでは下記に該当します。  
-[kubeconfig(v1)](https://kubernetes.io/docs/reference/config-api/kubeconfig.v1/)
+例えば前段でも記載した `pod.yml` の apiVersion は `v1` となっており、リファレンスでは下記に該当します。
+
+https://kubernetes.io/docs/reference/config-api/kubeconfig.v1/
 
 ---
 
@@ -1598,5 +1601,6 @@ root@minikube:~/tutorial#
 ここまでご覧いただき、ありがとうございました！  
 次の記事ではは Kubernetes を実際にハンズオンで学習しております。
 
-お時間あるときにご覧いただけたらと思います🙇‍♂️  
-<https://zenn.dev/milly_s/articles/4796bd18a92b47>
+お時間あるときにご覧いただけたらと思います🙇‍♂️
+
+https://zenn.dev/wan0ri/articles/4796bd18a92b47
