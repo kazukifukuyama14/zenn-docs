@@ -15,7 +15,7 @@
   "license": "ISC",
   "description": "* [📘 How to use](https://zenn.dev/zenn/articles/zenn-cli-guide)# zenn-docs",
   "dependencies": {
-    "zenn-cli": "^0.1.159"
+    "zenn-cli": "^0.1.161"
   },
   "repository": {
     "type": "git",
