@@ -29,7 +29,7 @@ Kubernetesを学習したいけれど、「Hello World」レベルのサンプ�
 - **バックエンド**: Express APIでユーザーデータを提供
 - **データベース**: PostgreSQLでユーザー情報を永続化
 
-![infra](../images/kubernetes-app/infra.png)
+![infra](/images/kubernetes-app/infra.png)
 
 ## 📁 GitHubリポジトリ
 
@@ -72,7 +72,7 @@ git --version
 
 ### 参考:著者のスペック
 
-![macbookspec](../images/kubernetes-app/macbook-spec.png)
+![macbookspec](/images/kubernetes-app/macbook-spec.png)
 
 :::message
 **初心者の方へ**
