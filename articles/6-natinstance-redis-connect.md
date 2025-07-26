@@ -4,7 +4,6 @@ emoji: "☁️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["EC2", "NATインスタンス", "Redis"]
 published: true
-published_at: 2025-06-23 22:00
 ---
 
 業務にて、アプリ制作チームより以下依頼がありました。
