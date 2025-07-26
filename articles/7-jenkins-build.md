@@ -4,7 +4,6 @@ emoji: "👨‍⚖️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [Jenkins, AWS, ECS, Linux, Git]
 published: true
-published_at: 2025-07-04 20:30
 ---
 
 # 背景

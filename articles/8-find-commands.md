@@ -4,7 +4,6 @@ emoji: "🔎"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [Linux, shell, find]
 published: true
-published_at: 2025-07-05 09:00
 ---
 
 # はじめに

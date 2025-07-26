@@ -4,7 +4,6 @@ emoji: "🐷"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [AWS, RDS, EventBridge]
 published: true
-published_at: 2025-07-14 21:00
 ---
 
 ## 初めに
