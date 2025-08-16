@@ -1,5 +1,5 @@
 ---
-title: "AWS Secrets Manager名の差分チェックをExcelで行う方法"
+title: "差分チェックをExcelで行う方法"
 emoji: "🎉"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: [AWS, Excel, スプレッドシート, 生産性向上, 効率化]
