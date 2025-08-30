@@ -2,7 +2,7 @@
 title: "X(旧：Twitter)に群がるインプレゾンビを一網打尽にする悪魔のようなスクリプトを作成した件"
 emoji: "💀"
 type: "idea" # tech: 技術記事 / idea: アイデア
-topics: [Javascript, idea, x, Twitter, Script]
+topics: [Javascript, x, Twitter, Script]
 published: true
 ---
 
