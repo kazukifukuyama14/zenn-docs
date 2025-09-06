@@ -2143,7 +2143,7 @@ http://localhost:8080
 
 ![代替案.png](/images/kubernetes-tutorial/代替案.png)
 
-## 🗑️ 後片付け
+## 後片付け
 
 今回は多めにリソースを作成しましたので、すべて削除していきます🔥:
 
