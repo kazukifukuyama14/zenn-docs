@@ -6,13 +6,17 @@ topics: [AWS, Terraform, Hugo, GitHub Actions, ブログ]
 published: true
 ---
 
+## はじめに
+
+今後は自分のブログにアウトプットして育てていきたいと思います。
+
+https://wan0ri.com/
+
 ## 概要
 
 - AWS と Hugo の組み合わせで技術ブログを構築した。
 - `staging` : リポジトリ公開用。stagingはローカル検証用で構築したので **ACM** と **Route53** の構築は省略。
 - `prod` : リポジトリはPrivateで管理。
-
-https://wan0ri.com/
 
 https://github.com/kazukifukuyama14/techblog-staging
 
