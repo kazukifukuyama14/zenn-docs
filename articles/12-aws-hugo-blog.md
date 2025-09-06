@@ -123,9 +123,9 @@ aws-hugo-blog/
 | CloudWatchロググループ    | aws_cloudwatch_log_group | CloudFrontやS3のログ管理                    |
 | GitHub Actions用IAMロール | aws_iam_role             | OIDC連携によるセキュアなCI/CD（高度な構成） |
 
-## scripts/をGitHub Actionsで自動化
+## GitHub Actionsで自動化
 
-### 📄 .github/workflows/deploy.yml（構成例）
+### .github/workflows/deploy.yml（構成例）
 
 ```yaml
 name: Deploy Hugo Blog to AWS
