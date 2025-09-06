@@ -15,7 +15,7 @@ published_at: 2025-06-04 09:00
 
 実際のハンズオンは下記の記事よりご覧ください🙇‍♂️
 
-https://zenn.dev/wan0ri/articles/4796bd18a92b47
+https://zenn.dev/wan0ri/articles/4-kubernetes-app
 
 ## 🎯 冒頭のご挨拶
 

@@ -13,7 +13,7 @@ Kubernetesを学習したいけれど、「Hello World」レベルのサンプ�
 
 本記事では、**React（フロントエンド）+ Node.js/Express（バックエンド）+ PostgreSQL（データベース）** を組み合わせた本格的なフルスタックWebアプリケーションを、Kubernetesクラスター上に構築する手順を詳しく解説します。
 
-## 🎯 この記事で学べること
+## この記事で学べること
 
 - Kubernetesの基本概念（Pod、Deployment、Service、ConfigMap、PersistentVolume）
 - マイクロサービス間の通信設定
@@ -21,7 +21,7 @@ Kubernetesを学習したいけれど、「Hello World」レベルのサンプ�
 - データベースの永続化
 - 実際の開発で遭遇するトラブルシューティング
 
-## 🏗️ 構築するアプリケーション
+## 構築するアプリケーション
 
 シンプルなユーザー管理システムを構築します：
 
@@ -31,7 +31,7 @@ Kubernetesを学習したいけれど、「Hello World」レベルのサンプ�
 
 ![システム構成図](/images/kubernetes-app/Infra.png)
 
-## 📁 GitHubリポジトリ
+## GitHubリポジトリ
 
 完全なソースコードはこちらで公開しています：
 
@@ -41,7 +41,7 @@ Kubernetesを学習したいけれど、「Hello World」レベルのサンプ�
 git clone https://github.com/kazukifukuyama14/kubernetes-webapp-tutorial.git
 ```
 
-## 📋 前提条件
+## 前提条件
 
 ### 必要なツール
 
@@ -80,7 +80,7 @@ KubernetesやDockerの基本概念について不安な方は、まず公式ド�
 ただし、本記事では実際の手順を詳しく解説するため、基本的な知識がなくても進められるよう配慮しています。
 :::
 
-## 🏛️ アーキテクチャ概要
+## アーキテクチャ概要
 
 今回構築するシステムの全体像：
 
@@ -100,7 +100,7 @@ KubernetesやDockerの基本概念について不安な方は、まず公式ド�
 
 それでは、実際に構築を始めていきましょう！🚀
 
-## 🏗️ システム構成の詳細解説
+## システム構成の詳細解説
 
 ### 各コンポーネントの役割
 
@@ -127,7 +127,7 @@ KubernetesやDockerの基本概念について不安な方は、まず公式ド�
 
 ---
 
-## 🚀 ステップバイステップ構築手順
+## ステップバイステップ構築手順
 
 ### Step 1: 環境準備
 
@@ -200,7 +200,7 @@ minikube service webapp-frontend-service
 
 ---
 
-## 🔥 実際に躓いた箇所とその解決法
+## 実際に躓いた箇所とその解決法
 
 ### 1. `ErrImageNeverPull` エラー
 
@@ -288,7 +288,7 @@ kubectl logs -l app=postgres
 
 ---
 
-## 🔍 動作確認とデバッグ
+## 動作確認とデバッグ
 
 ### 基本確認コマンド
 
@@ -317,7 +317,7 @@ kubectl exec -it $(kubectl get pods -l app=webapp-frontend -o jsonpath='{.items[
 
 ---
 
-## 🎯 学習ポイントまとめ
+## 学習ポイントまとめ
 
 ### Kubernetesの実践知識
 
@@ -353,4 +353,4 @@ minikube delete
 ---
 
 この実践チュートリアルを通じて、Kubernetesの基本から実際の運用で遭遇する問題まで体験できました。  
-完全なソースコードは [GitHubリポジトリ](https://github.com/kazukifukuyama14/kubernetes-webapp-tutorial) で確認できます！🚀
+完全なソースコードは [GitHubリポジトリ](https://github.com/kazukifukuyama14/kubernetes-webapp-tutorial) で確認できます。
